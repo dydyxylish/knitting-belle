@@ -27,6 +27,7 @@ const schema = a.schema({
 			price: a.integer().required(),
 			downloadCount: a.integer().default(0),
 			YarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
+			PurchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
 		})
 		.authorization((allow) => [allow.guest()]),
 	// 購入履歴
