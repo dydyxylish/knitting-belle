@@ -30,12 +30,14 @@ const schema = a.schema({
 		})
 		.authorization((allow) => [allow.guest()]),
 	// 購入履歴
-	PurchaseHistory: a.model({
-		userId: a.string().required(),
-		knittingPatternId: a.id(),
-		knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
-		purchasedAt: a.datetime().required(),
-	}),
+	PurchaseHistory: a
+		.model({
+			userId: a.string().required(),
+			knittingPatternId: a.id(),
+			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
+			purchasedAt: a.datetime().required(),
+		})
+		.authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
