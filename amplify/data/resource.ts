@@ -7,23 +7,47 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.publicApiKey()]),
+	// 毛糸の作品画像
+	YarnCraftImage: a
+		.model({
+			title: a.string().required(),
+			alt: a.string().required(),
+			imagePath: a.string().required(),
+			sortOrder: a.integer().required(),
+			knittingPatternId: a.id().required(),
+			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
+		})
+		.authorization((allow) => [allow.guest()]),
+	// 編み図
+	KnittingPattern: a
+		.model({
+			title: a.string().required(),
+			description: a.string().required(),
+			pdfPath: a.string().required(),
+			price: a.integer().required(),
+			downloadCount: a.integer().default(0),
+			YarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
+		})
+		.authorization((allow) => [allow.guest()]),
+	// 購入履歴
+	PurchaseHistory: a.model({
+		userId: a.string().required(),
+		knittingPatternId: a.id(),
+		knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
+		purchasedAt: a.datetime().required(),
+	}),
 });
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
-  schema,
-  authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
-    apiKeyAuthorizationMode: {
-      expiresInDays: 30,
-    },
-  },
+	schema,
+	authorizationModes: {
+		defaultAuthorizationMode: "userPool",
+		apiKeyAuthorizationMode: {
+			expiresInDays: 30,
+		},
+	},
 });
 
 /*== STEP 2 ===============================================================
