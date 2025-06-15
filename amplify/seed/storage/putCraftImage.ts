@@ -4,9 +4,9 @@ import { getLogger } from "../../../lib/logger";
 
 const log = getLogger(import.meta.url);
 
-export const putKnittingPattern = async () => {
+export const putCraftImage = async () => {
 	const result = await list({
-		path: "seed-assets/pdf/",
+		path: "seed-assets/image/",
 		options: {
 			bucket: "seedBucket",
 			listAll: true,
@@ -15,15 +15,15 @@ export const putKnittingPattern = async () => {
 	log.info(result);
 
 	const promises = result.items
-		.filter((item) => item.path?.match(/\.pdf$/i))
-		.map(async (knittingPattern) => {
+		.filter((item) => item.path?.match(/\.jpg$/i))
+		.map(async (image) => {
 			await copyFile({
 				source: {
-					path: knittingPattern.path,
+					path: image.path,
 					bucket: "seedBucket",
 				},
 				destination: {
-					path: `knittingPattern/${knittingPattern.path.split("/").pop()}`,
+					path: `yarnCraftImage/${image.path.split("/").slice(-2).join("/")}`,
 					bucket: "knittingBelle",
 				},
 			});

@@ -17,7 +17,9 @@ const schema = a.schema({
 			knittingPatternId: a.id().required(),
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
 		})
-		.authorization((allow) => [allow.guest().to(["list"])]),
+		.authorization((allow) => [
+			allow.groups(["admin"]).to(["read", "create", "update"]),
+		]),
 	// 編み図
 	KnittingPattern: a
 		.model({
@@ -29,7 +31,9 @@ const schema = a.schema({
 			YarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
 			PurchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
 		})
-		.authorization((allow) => [allow.guest().to(["list"])]),
+		.authorization((allow) => [
+			allow.groups(["admin"]).to(["read", "create", "update"]),
+		]),
 	// 購入履歴
 	PurchaseHistory: a
 		.model({
@@ -38,7 +42,9 @@ const schema = a.schema({
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
 			purchasedAt: a.datetime().required(),
 		})
-		.authorization((allow) => [allow.owner()]),
+		.authorization((allow) => [
+			allow.groups(["admin"]).to(["read", "create", "update"]),
+		]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
