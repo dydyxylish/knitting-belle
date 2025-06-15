@@ -17,7 +17,7 @@ const schema = a.schema({
 			knittingPatternId: a.id().required(),
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
 		})
-		.authorization((allow) => [allow.guest().to(["read"])]),
+		.authorization((allow) => [allow.guest().to(["list"])]),
 	// 編み図
 	KnittingPattern: a
 		.model({
@@ -29,7 +29,7 @@ const schema = a.schema({
 			YarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
 			PurchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
 		})
-		.authorization((allow) => [allow.guest().to(["read"])]),
+		.authorization((allow) => [allow.guest().to(["list"])]),
 	// 購入履歴
 	PurchaseHistory: a
 		.model({

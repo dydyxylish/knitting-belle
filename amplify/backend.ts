@@ -19,7 +19,6 @@ const seedBucket = Bucket.fromBucketAttributes(ownResourceStack, "SeedBucket", {
 
 backend.addOutput({
 	storage: {
-		aws_region: seedBucket.env.region,
 		bucket_name: seedBucket.bucketArn,
 	},
 });
