@@ -10,15 +10,7 @@ const backend = defineBackend({
 	storage,
 });
 
-const ownResourceStack = backend.createStack("own-resource-stack");
-
-const seedBucket = Bucket.fromBucketAttributes(ownResourceStack, "SeedBucket", {
+Bucket.fromBucketAttributes(backend.stack, "SeedBucket", {
 	bucketArn: "arn:aws:s3:::knitting-belle",
 	region: "ap-northeast-1",
-});
-
-backend.addOutput({
-	storage: {
-		bucket_name: seedBucket.bucketArn,
-	},
 });
