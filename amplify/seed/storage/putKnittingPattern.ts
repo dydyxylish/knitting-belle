@@ -1,20 +1,16 @@
 import { list } from "aws-amplify/storage";
-import { copyFile } from "./util/copyObject";
-import { getLogger } from "../../../lib/logger";
-
-const log = getLogger(import.meta.url);
+import { copyFile } from "@/amplify/seed/storage/util/copyObject";
 
 export const putKnittingPattern = async () => {
-	const result = await list({
+	const pdfFiles = await list({
 		path: "seed-assets/pdf/",
 		options: {
 			bucket: "seedBucket",
 			listAll: true,
 		},
 	});
-	log.info(result);
 
-	const promises = result.items
+	const promises = pdfFiles.items
 		.filter((item) => item.path?.match(/\.pdf$/i))
 		.map(async (knittingPattern) => {
 			await copyFile({
@@ -28,5 +24,5 @@ export const putKnittingPattern = async () => {
 				},
 			});
 		});
-	await Promise.all(promises);
+	return await Promise.all(promises);
 };

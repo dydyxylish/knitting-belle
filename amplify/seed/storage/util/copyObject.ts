@@ -1,5 +1,5 @@
 import { copy, type CopyWithPathInput } from "aws-amplify/storage";
-import { getLogger } from "../../../../lib/logger";
+import { getLogger } from "@/lib/logger";
 
 const log = getLogger(import.meta.url);
 
@@ -10,8 +10,8 @@ export const copyFile = async ({ source, destination }: CopyWithPathInput) => {
 			source: source,
 			destination: destination,
 		});
-		log.info(response);
+		log.info({ response }, "successfully copied");
 	} catch (e) {
-		log.error(e);
+		log.error({ e }, "failed to copy");
 	}
 };

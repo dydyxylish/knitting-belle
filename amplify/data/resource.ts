@@ -25,11 +25,13 @@ const schema = a.schema({
 		.model({
 			title: a.string().required(),
 			description: a.string().required(),
+			attention: a.string(),
 			pdfPath: a.string().required(),
 			price: a.integer().required(),
 			downloadCount: a.integer().default(0),
-			YarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
-			PurchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
+			yarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
+			purchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
+			isPublished: a.boolean().default(false),
 		})
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),

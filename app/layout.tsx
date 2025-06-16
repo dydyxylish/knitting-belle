@@ -5,20 +5,19 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Knitting Belle",
-  description: "Knitting Belleの編み図ダウンロードサイト(Knitting pattern download site by Knitting-Belle)",
+	title: "Knitting Belle",
+	description:
+		"Knitting Belleの編み図ダウンロードサイト(Knitting pattern download site by knitting_belle)",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="ja">
-      <body className={inter.className}>
-          {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="ja">
+			<body className={inter.className}>{children}</body>
+		</html>
+	);
 }
