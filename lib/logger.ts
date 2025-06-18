@@ -1,5 +1,5 @@
-import { fileURLToPath } from "node:url";
 import { basename } from "node:path";
+import { fileURLToPath } from "node:url";
 import pino from "pino";
 
 const isBrowser = typeof window !== "undefined";

@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { a, type ClientSchema, defineData } from "@aws-amplify/backend";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -35,6 +35,7 @@ const schema = a.schema({
 		})
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
+			allow.publicApiKey().to(["read"]),
 		]),
 	// 購入履歴
 	PurchaseHistory: a

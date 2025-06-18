@@ -1,20 +1,19 @@
 import { readFile } from "node:fs/promises";
-import { Amplify } from "aws-amplify";
-import { deleteUser, signIn } from "aws-amplify/auth";
-import { generateClient } from "aws-amplify/data";
 import {
 	addToUserGroup,
 	createAndSignUpUser,
 	getSecret,
 } from "@aws-amplify/seed";
+import { Amplify } from "aws-amplify";
+import { deleteUser, signIn } from "aws-amplify/auth";
+import { generateClient } from "aws-amplify/data";
 
 import type { Schema } from "@/amplify/data/resource";
-import { getLogger } from "@/lib/logger";
-
-import { putKnittingPattern } from "@/amplify/seed/storage/putKnittingPattern";
 import { putCraftImage } from "@/amplify/seed/storage/putCraftImage";
-import { createKnittingPattern } from "./data/createKnittingPattern";
+import { putKnittingPattern } from "@/amplify/seed/storage/putKnittingPattern";
+import { getLogger } from "@/lib/logger";
 import { createCraftImage } from "./data/createCraftImage";
+import { createKnittingPattern } from "./data/createKnittingPattern";
 
 // this is used to get the amplify_outputs.json file as the file will not exist until sandbox is created
 const url = new URL("../../amplify_outputs.json", import.meta.url);

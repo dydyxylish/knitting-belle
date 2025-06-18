@@ -1,6 +1,6 @@
-import { parse } from "yaml";
-import { downloadData } from "aws-amplify/storage";
+import { readFileSync } from "node:fs";
 import type { Client } from "aws-amplify/data";
+import { parse } from "yaml";
 
 import type { Schema } from "@/amplify/data/resource";
 import { getLogger } from "@/lib/logger";
@@ -8,15 +8,13 @@ import { getLogger } from "@/lib/logger";
 const log = getLogger(import.meta.url);
 
 export const createKnittingPattern = async (dbClient: Client<Schema>) => {
-	const { body } = await downloadData({
-		path: "seed-assets/yml/knittingPattern.yml",
-		options: {
-			bucket: "seedBucket",
-		},
-	}).result;
-	if (!body) throw new Error("Failed to download YAML: no body");
-	const text = await body.text();
-	const knittingPatterns = parse(text) as Schema["KnittingPattern"]["type"][];
+	const yamlFile = readFileSync(
+		`${process.cwd()}/amplify/seed/data/asset/knittingPattern.yml`,
+		"utf8",
+	);
+	const knittingPatterns = parse(
+		yamlFile,
+	) as Schema["KnittingPattern"]["type"][];
 
 	const promises = knittingPatterns.map(async (knittingPattern) => {
 		try {

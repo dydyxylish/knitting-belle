@@ -1,15 +1,27 @@
-import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
+import { dbClient } from "@/db/ssgClient";
 
-Amplify.configure(outputs);
+export const dynamic = "force-static";
 
-export default function App() {
+export default async function App() {
+	const { data: knittingPatterns } = await dbClient.models.KnittingPattern.list(
+		{
+			filter: {
+				isPublished: {
+					eq: true,
+				},
+			},
+		},
+	);
+
 	return (
 		<main>
 			<div className="container mx-auto">
-				<h1 className="text-3xl font-bold underline">
+				<h1 className="font-bold text-3xl underline">
 					編み図ダウンロードサイト
 				</h1>
+				{knittingPatterns.map((knittingPatterns) => (
+					<span key={knittingPatterns.id}>{knittingPatterns.title}</span>
+				))}
 			</div>
 		</main>
 	);
