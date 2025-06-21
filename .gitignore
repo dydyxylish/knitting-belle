@@ -43,3 +43,6 @@ amplifyconfiguration*
 # seed
 seed-assets
 seed-policy.json
+
+# REST Client
+.http

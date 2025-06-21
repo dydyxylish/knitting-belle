@@ -5,7 +5,7 @@ import pino from "pino";
 const isBrowser = typeof window !== "undefined";
 const isProduction = process.env.NODE_ENV === "production";
 
-export const logger = isBrowser
+const logger = isBrowser
 	? pino({
 			browser: {
 				asObject: true,
@@ -28,10 +28,9 @@ export const logger = isBrowser
 					},
 				},
 			});
-export function getLogger(moduleUrl: string) {
+// 第一引数にimport.meta.urlをわたす
+export const getLogger = (moduleUrl: string) => {
 	const filePath = fileURLToPath(moduleUrl);
 	const moduleName = basename(filePath);
 	return logger.child({ module: moduleName });
-}
-
-export default logger;
+};
