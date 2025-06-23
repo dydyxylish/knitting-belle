@@ -1,3 +1,7 @@
+import { KnittingPatternList } from "./_containers/knittingPatternList";
+
+export const experimental_ppr = true;
+
 export default async function App() {
 	return (
 		<main>
@@ -5,9 +9,7 @@ export default async function App() {
 				<h1 className="font-bold text-3xl underline">
 					編み図ダウンロードサイト
 				</h1>
-				{/* {knittingPatterns.map((knittingPatterns) => (
-					<span key={knittingPatterns.id}>{knittingPatterns.title}</span>
-				))} */}
+				<KnittingPatternList></KnittingPatternList>
 			</div>
 		</main>
 	);

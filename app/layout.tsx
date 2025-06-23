@@ -7,6 +7,8 @@ import "./globals.css";
 
 Amplify.configure(outputs);
 
+export const experimental_ppr = true;
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
