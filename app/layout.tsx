@@ -4,10 +4,11 @@ import { Inter } from "next/font/google";
 
 import outputs from "@/amplify_outputs.json";
 import "./globals.css";
+import Link from "next/link";
+
+import { LoginWrapper } from "./_components/LoginWrapper";
 
 Amplify.configure(outputs);
-
-export const experimental_ppr = true;
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,20 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ja">
-			<body className={inter.className}>{children}</body>
+			<body className={inter.className}>
+				<div className="flex gap-8"></div>
+				<Link href="/">
+					<button className="border" type="button">
+						トップに戻る
+					</button>
+				</Link>
+				<LoginWrapper>
+					<button type="button" className="border">
+						Sign in Google Account
+					</button>
+				</LoginWrapper>
+				{children}
+			</body>
 		</html>
 	);
 }

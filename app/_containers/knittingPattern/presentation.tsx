@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Schema } from "@/amplify/data/resource";
 
 interface KnittingPatternPresentationProps {
@@ -9,12 +11,12 @@ export const KnittingPatternPresentation = ({
 	knittingPattern,
 }: KnittingPatternPresentationProps) => {
 	return (
-		<div className="border">
-			{children}
-			<p>{knittingPattern.id}</p>
-			<p>{knittingPattern.title}</p>
-			<p>{knittingPattern.description}</p>
-			<p>{knittingPattern.price}</p>
-		</div>
+		<Link href={`/${knittingPattern.id}`}>
+			<div className="border">
+				{children}
+				<p>{knittingPattern.id}</p>
+				<p>{knittingPattern.title}</p>
+			</div>
+		</Link>
 	);
 };

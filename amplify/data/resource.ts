@@ -30,10 +30,7 @@ const schema = a.schema({
 		})
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
-			// allow.publicApiKey().to(["read"]),
-			allow
-				.guest()
-				.to(["read"]),
+			allow.guest().to(["read"]),
 		]),
 	// 購入履歴
 	PurchaseHistory: a

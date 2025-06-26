@@ -46,3 +46,5 @@ seed-policy.json
 
 # REST Client
 .http
+
+.env

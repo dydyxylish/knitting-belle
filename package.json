@@ -15,7 +15,6 @@
 	},
 	"dependencies": {
 		"@aws-amplify/adapter-nextjs": "^1.6.4",
-		"@aws-amplify/ui-react": "^6.11.2",
 		"@tailwindcss/postcss": "^4.1.10",
 		"aws-amplify": "^6.15.1",
 		"class-variance-authority": "^0.7.1",
@@ -23,14 +22,16 @@
 		"dataloader": "^2.2.3",
 		"es-toolkit": "^1.39.4",
 		"lucide-react": "^0.515.0",
-		"next": "15.4.0-canary.92",
+		"next": "15.3.4",
 		"pino": "^9.7.0",
 		"postcss": "^8.5.6",
 		"react": "^19.1.0",
+		"react-cookie": "^8.0.1",
 		"react-dom": "^19.1.0",
 		"server-only": "^0.0.1",
 		"tailwind-merge": "^3.3.1",
-		"tailwindcss": "^4.1.10"
+		"tailwindcss": "^3.4.17",
+		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
 		"@aws-amplify/backend": "^1.16.1",
@@ -40,6 +41,7 @@
 		"@types/node": "^22.15.32",
 		"@types/react": "^19.1.8",
 		"@types/react-dom": "^19.1.6",
+		"autoprefixer": "^10.4.21",
 		"aws-cdk": "^2.1019.1",
 		"aws-cdk-lib": "^2.202.0",
 		"constructs": "^10.4.2",

@@ -1,5 +1,3 @@
-import { basename } from "node:path";
-import { fileURLToPath } from "node:url";
 import pino from "pino";
 
 const isBrowser = typeof window !== "undefined";
@@ -28,9 +26,7 @@ const logger = isBrowser
 					},
 				},
 			});
-// 第一引数にimport.meta.urlをわたす
+// 第一引数にimport.meta.urlをわたす想定
 export const getLogger = (moduleUrl: string) => {
-	const filePath = fileURLToPath(moduleUrl);
-	const moduleName = basename(filePath);
-	return logger.child({ module: moduleName });
+	return logger.child({ module: moduleUrl });
 };
