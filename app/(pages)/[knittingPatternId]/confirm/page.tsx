@@ -1,5 +1,6 @@
 import { getCachedKnittingPatternList } from "@/app/_lib/fetch/knittingPattern/getCachedKnittingPatternList";
 import { ConfirmKnittingPattern } from "./_containers/ConfirmKnittingPattern";
+import { PaymentForm } from "./_containers/PaymentForm";
 
 export async function generateStaticParams() {
 	const knittingPatternList = await getCachedKnittingPatternList();
@@ -12,5 +13,10 @@ export default async function Page({
 	params: Promise<{ knittingPatternId: string }>;
 }) {
 	const { knittingPatternId: id } = await params;
-	return <ConfirmKnittingPattern id={id} />;
+	return (
+		<>
+			<ConfirmKnittingPattern id={id} />
+			<PaymentForm knittingPatternId={id} />
+		</>
+	);
 }

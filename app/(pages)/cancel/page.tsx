@@ -1,3 +1,3 @@
 export default function Page() {
-	return <div>thanks Page</div>;
+	return <div>cancel Page</div>;
 }

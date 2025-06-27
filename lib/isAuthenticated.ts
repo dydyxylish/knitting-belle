@@ -1,3 +1,4 @@
+import "server-only";
 import { fetchAuthSession } from "aws-amplify/auth/server";
 import { cookies } from "next/headers";
 

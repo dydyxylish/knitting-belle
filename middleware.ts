@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { getLogger } from "@/lib/logger";
 import { getFirstSegment, getLastSegment } from "@/lib/urlSegment";
-import { uuidValidateV4 } from "@/lib/uuidValidateV4";
+import { uuidValidate } from "@/lib/uuidValidate";
 
 const log = getLogger(import.meta.url);
 
@@ -13,7 +13,7 @@ export default async function middleware(request: NextRequest) {
 
 	// matcher: ["/:knittingPatternId/confirm"],
 	if (
-		uuidValidateV4(getFirstSegment(pathname)) &&
+		uuidValidate(getFirstSegment(pathname)) &&
 		getLastSegment(pathname) === "confirm"
 	) {
 		if (await isAuthenticated()) {
