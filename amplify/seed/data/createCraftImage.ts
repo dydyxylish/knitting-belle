@@ -39,7 +39,7 @@ export const createCraftImage = async (dbClient: Client<Schema>) => {
 				.map(async (yarnCraftImage) => {
 					const response = await dbClient.models.YarnCraftImage.create({
 						...yarnCraftImage,
-						knittingPatternId: knittingPattern.id,
+						knittingPatternSlug: knittingPattern.slug,
 					});
 					log.info({ response }, "successfully created YarnCraftImage:");
 				});

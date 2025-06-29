@@ -9,8 +9,8 @@ export const KnittingPatternListContainer = async () => {
 
 	return (
 		<KnittingPatternListPresentation>
-			{knittingPatterns.map(({ id }) => (
-				<KnittingPattern id={id} key={id}></KnittingPattern>
+			{knittingPatterns.map(({ slug }) => (
+				<KnittingPattern slug={slug} key={slug}></KnittingPattern>
 			))}
 		</KnittingPatternListPresentation>
 	);

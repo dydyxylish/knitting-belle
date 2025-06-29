@@ -1,4 +1,9 @@
-import { a, type ClientSchema, defineData } from "@aws-amplify/backend";
+import {
+	a,
+	type ClientSchema,
+	defineData,
+	defineFunction,
+} from "@aws-amplify/backend";
 
 const schema = a.schema({
 	// 毛糸の作品画像
@@ -8,9 +13,10 @@ const schema = a.schema({
 			alt: a.string().required(),
 			imagePath: a.string().required(),
 			sortOrder: a.integer().required(),
-			knittingPatternId: a.id().required(),
-			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
+			knittingPatternSlug: a.string().required(),
+			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternSlug"),
 		})
+		.identifier(["imagePath"])
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
 			allow.guest().to(["read"]),
@@ -18,16 +24,18 @@ const schema = a.schema({
 	// 編み図
 	KnittingPattern: a
 		.model({
+			slug: a.string().required(),
 			title: a.string().required(),
 			description: a.string().required(),
 			attention: a.string(),
 			pdfPath: a.string().required(),
 			price: a.integer().required(),
 			downloadCount: a.integer().default(0),
-			yarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternId"),
-			purchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternId"),
+			yarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternSlug"),
+			purchaseHistories: a.hasMany("PurchaseHistory", "knittingPatternSlug"),
 			isPublished: a.boolean().default(false),
 		})
+		.identifier(["slug"])
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
 			allow.guest().to(["read"]),
@@ -35,13 +43,22 @@ const schema = a.schema({
 	// 購入履歴
 	PurchaseHistory: a
 		.model({
-			userId: a.string().required(),
-			knittingPatternId: a.id(),
-			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternId"),
+			user: a.string().required(), // JWT sub
+			knittingPatternSlug: a.string().required(),
+			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternSlug"),
 			purchasedAt: a.datetime().required(),
+			paymentIntentId: a.string().required(),
 		})
+		.identifier(["user", "knittingPatternSlug"])
 		.authorization((allow) => [
+			allow.ownerDefinedIn("user"),
 			allow.groups(["admin"]).to(["read", "create", "update"]),
+			allow.owner().to(["read"]),
+		])
+		.secondaryIndexes((index) => [
+			index("paymentIntentId")
+				.queryField("listByPayment")
+				.name("paymentIntentIdIndex"),
 		]),
 });
 
@@ -54,5 +71,13 @@ export const data = defineData({
 		apiKeyAuthorizationMode: {
 			expiresInDays: 7,
 		},
+		// lambdaAuthorizationMode: {
+		// 	function: defineFunction({
+		// 		entry: "./custom-authorizer.ts",
+		// 	}),
+		// 	// (Optional) STEP 3
+		// 	// Configure the token's time to live
+		// 	timeToLiveInSeconds: 300,
+		// },
 	},
 });

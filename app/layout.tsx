@@ -1,14 +1,11 @@
-import { Amplify } from "aws-amplify";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import outputs from "@/amplify_outputs.json";
 import "./globals.css";
 import Link from "next/link";
 
 import { LoginWrapper } from "./_components/LoginWrapper";
-
-Amplify.configure(outputs);
+import { amplifyConfigure } from "./_lib/amplifyServerUtils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +14,8 @@ export const metadata: Metadata = {
 	description:
 		"Knitting Belleの編み図ダウンロードサイト(Knitting pattern download site by knitting_belle)",
 };
+
+amplifyConfigure();
 
 export default function RootLayout({
 	children,

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 const log = getLogger(import.meta.url);
 
-export default async function getUserInfo() {
+export const getCurrentUserInfo = async () => {
 	try {
 		const userInfo = await runWithAmplifyServerContext({
 			nextServerContext: { cookies },
@@ -20,4 +20,4 @@ export default async function getUserInfo() {
 		log.error({ error }, "ユーザ情報の取得に失敗しました");
 		return null;
 	}
-}
+};

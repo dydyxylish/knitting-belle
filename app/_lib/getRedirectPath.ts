@@ -1,11 +1,8 @@
-import { getFirstSegment, getLastSegment } from "@/lib/urlSegment";
-import { uuidValidate } from "@/lib/uuidValidate";
+import { getLastSegment } from "@/lib/urlSegment";
 
 export const getRedirectPath = (pathname: string) => {
-	if (
-		uuidValidate(getFirstSegment(pathname)) &&
-		getLastSegment(pathname) !== "confirm"
-	) {
+	if (getLastSegment(pathname) !== "confirm") {
+		// TODO TOPからログインするとバグる(confirmって商品ないよ)
 		return `${pathname}/confirm`;
 	} else if (pathname === "/account") {
 		return "/account";

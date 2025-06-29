@@ -11,7 +11,6 @@ export default async function AuthCallbackPage() {
 	const redirectTo = requestCookies.get("redirectTo");
 	if (redirectTo) {
 		log.debug({ redirectTo }, "redirectTo");
-		requestCookies.delete("redirectTo");
 		redirect(redirectTo.value);
 	}
 	redirect("/");

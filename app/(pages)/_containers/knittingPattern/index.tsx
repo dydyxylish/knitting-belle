@@ -1,9 +1,9 @@
 import { KnittingPatternContainer } from "./container";
 
 interface KnittingPatternProps {
-	id: string;
+	slug: string;
 }
 
-export const KnittingPattern = ({ id }: KnittingPatternProps) => (
-	<KnittingPatternContainer id={id} />
+export const KnittingPattern = ({ slug }: KnittingPatternProps) => (
+	<KnittingPatternContainer slug={slug} />
 );

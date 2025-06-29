@@ -23,6 +23,7 @@ const logger = isBrowser
 						colorize: true,
 						translateTime: "yyyy-mm-dd HH:MM:ss.l",
 						ignore: "pid,hostname",
+						timezone: "Asia/Tokyo",
 					},
 				},
 			});

@@ -11,10 +11,10 @@ export const KnittingPatternPresentation = ({
 	knittingPattern,
 }: KnittingPatternPresentationProps) => {
 	return (
-		<Link href={`/${knittingPattern.id}`}>
+		<Link href={`/${knittingPattern.slug}`}>
 			<div className="border">
 				{children}
-				<p>{knittingPattern.id}</p>
+				<p>{knittingPattern.slug}</p>
 				<p>{knittingPattern.title}</p>
 			</div>
 		</Link>

@@ -20,5 +20,5 @@ export const auth = defineAuth({
 			logoutUrls: ["http://localhost:3000/api/auth/sign-out-callback"],
 		},
 	},
-	groups: ["admin", "regular"],
+	groups: ["admin"],
 });

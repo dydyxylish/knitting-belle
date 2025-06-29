@@ -1,11 +1,11 @@
 import "server-only";
 
-import { getKnittingPatternsByIdsLoader } from "@/db/dataloader/knittingPattern/getKnittingPatternByIdsLoader";
-import { getYarnCraftImagesByIdsLoader } from "@/db/dataloader/yarnCraftImage/getYarnCraftImagesByIdsLoader";
+import { getKnittingPatternsBySlugsLoader } from "./knittingPattern/getKnittingPatternByIdsLoader";
+import { getYarnCraftImagesBySlugsLoader } from "./yarnCraftImage/getYarnCraftImagesByIdsLoader";
 
 export const createLoaders = () => {
 	return {
-		knittingPatterns: getKnittingPatternsByIdsLoader(),
-		yarnCraftImages: getYarnCraftImagesByIdsLoader(),
+		knittingPatterns: getKnittingPatternsBySlugsLoader(),
+		yarnCraftImages: getYarnCraftImagesBySlugsLoader(),
 	};
 };

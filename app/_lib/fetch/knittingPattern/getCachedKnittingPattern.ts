@@ -4,10 +4,10 @@ import { runWithAmplifyServerContext } from "@/app/_lib/amplifyServerUtils";
 import { getKnittingPattern } from "@/db/repository/knittingPattern/getKnittingPattern";
 
 export const getCachedKnittingPattern = unstable_cache(
-	async (id) =>
+	async (slug) =>
 		await runWithAmplifyServerContext({
 			nextServerContext: null,
-			operation: () => getKnittingPattern(id),
+			operation: () => getKnittingPattern(slug),
 		}),
 	["knitting-pattern"],
 	{

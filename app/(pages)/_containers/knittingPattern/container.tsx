@@ -3,16 +3,16 @@ import { YarnCraftImage } from "../yarnCraftImage";
 import { KnittingPatternPresentation } from "./presentation";
 
 interface KnittingPatternContainerProps {
-	id: string;
+	slug: string;
 }
 
 export const KnittingPatternContainer = async ({
-	id,
+	slug,
 }: KnittingPatternContainerProps) => {
-	const knittingPattern = await getCachedKnittingPattern(id);
+	const knittingPattern = await getCachedKnittingPattern(slug);
 	return (
 		<KnittingPatternPresentation knittingPattern={knittingPattern}>
-			<YarnCraftImage knittingPatternId={knittingPattern.id} />
+			<YarnCraftImage knittingPatternSlug={knittingPattern.slug} />
 		</KnittingPatternPresentation>
 	);
 };

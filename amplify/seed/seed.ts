@@ -12,6 +12,7 @@ import type { Schema } from "@/amplify/data/resource";
 import { putCraftImage } from "@/amplify/seed/storage/putCraftImage";
 import { putKnittingPattern } from "@/amplify/seed/storage/putKnittingPattern";
 import { getLogger } from "@/lib/logger";
+import { createAdminUser } from "./auth/createAdminUser";
 import { createCraftImage } from "./data/createCraftImage";
 import { createKnittingPattern } from "./data/createKnittingPattern";
 
@@ -23,13 +24,13 @@ Amplify.configure(outputs);
 const dbClient = generateClient<Schema>();
 const log = getLogger(import.meta.url);
 
-const username = await getSecret("username");
-const password = await getSecret("password");
+const seedUsername = await getSecret("seedUsername");
+const seedPassword = await getSecret("seedPassword");
 
 try {
 	const user = await createAndSignUpUser({
-		username: username,
-		password: password,
+		username: seedUsername,
+		password: seedPassword,
 		signInAfterCreation: false,
 		signInFlow: "Password",
 		userAttributes: {
@@ -38,13 +39,14 @@ try {
 	});
 	await addToUserGroup(user, "admin");
 	await signIn({
-		username,
-		password,
+		username: seedUsername,
+		password: seedPassword,
 	});
 
 	await Promise.all([putKnittingPattern(), putCraftImage()]);
 	await createKnittingPattern(dbClient);
 	await createCraftImage(dbClient);
+	await createAdminUser();
 } finally {
 	try {
 		await deleteUser();

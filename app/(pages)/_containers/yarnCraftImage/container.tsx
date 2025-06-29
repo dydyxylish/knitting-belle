@@ -2,12 +2,12 @@ import { getCachedYarnCraftImage } from "@/app/_lib/fetch/yarnCraftImage/getCach
 import { YarnCraftImagePresentation } from "./presentation";
 
 interface YarnCraftImageContainerProps {
-	knittingPatternId: string;
+	knittingPatternSlug: string;
 }
 
 export const YarnCraftImageContainer = async ({
-	knittingPatternId,
+	knittingPatternSlug,
 }: YarnCraftImageContainerProps) => {
-	const yarnCraftImages = await getCachedYarnCraftImage(knittingPatternId);
+	const yarnCraftImages = await getCachedYarnCraftImage(knittingPatternSlug);
 	return <YarnCraftImagePresentation yarnCraftImages={yarnCraftImages} />;
 };

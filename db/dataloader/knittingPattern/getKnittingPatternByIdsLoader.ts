@@ -2,17 +2,17 @@ import DataLoader from "dataloader";
 import { keyBy } from "es-toolkit";
 import { cache } from "react";
 
-import { queryKnittingPatternsByIds } from "@/db/query/knittingPattern/queryKnittingPatternByIds";
+import { queryKnittingPatternsBySlugs } from "@/db/query/knittingPattern/queryKnittingPatternBySlugs";
 
-export const getKnittingPatternsByIdsLoader = cache(
+export const getKnittingPatternsBySlugsLoader = cache(
 	() =>
-		new DataLoader(async (ids: readonly string[]) => {
-			const knittingPatterns = await queryKnittingPatternsByIds(ids);
-			const knittingPatternMap = keyBy(knittingPatterns, (item) => item.id);
-			return ids.map(
-				(id) =>
-					knittingPatternMap[id] ||
-					new Error(`id: ${id}に該当するknittingPatternIdが存在しません`),
+		new DataLoader(async (slugs: readonly string[]) => {
+			const knittingPatterns = await queryKnittingPatternsBySlugs(slugs);
+			const knittingPatternMap = keyBy(knittingPatterns, (item) => item.slug);
+			return slugs.map(
+				(slug) =>
+					knittingPatternMap[slug] ||
+					new Error(`slug: ${slug}に該当するslugが存在しません`),
 			);
 		}),
 );

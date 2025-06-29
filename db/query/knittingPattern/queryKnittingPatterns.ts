@@ -16,7 +16,7 @@ export const queryKnittingPatternList = async () => {
 						},
 					],
 				},
-				selectionSet: ["id"],
+				selectionSet: ["slug"],
 			});
 		log.info({ knittingPatterns }, "編み図（全体）データを取得しました");
 

@@ -9,6 +9,7 @@ import { getLogger } from "@/lib/logger";
 import { paymentSchema } from "@/lib/schema";
 import stripe from "@/lib/stripe";
 import { getCachedKnittingPattern } from "../fetch/knittingPattern/getCachedKnittingPattern";
+import { getCurrentUserInfo } from "../fetch/user/getUserInfo";
 
 const log = getLogger(import.meta.url);
 
@@ -24,7 +25,7 @@ export async function makePayment(formData: FormData) {
 	}
 
 	const knittingPattern = await getCachedKnittingPattern(
-		submission.value.knittingPatternId,
+		submission.value.knittingPatternSlug,
 	);
 	log.error(knittingPattern);
 	if (knittingPattern instanceof Error) {
@@ -51,16 +52,22 @@ export async function makePayment(formData: FormData) {
 			quantity: 1,
 		},
 	];
+	const user = await getCurrentUserInfo();
+	if (!user) redirect("/cancel");
 	const session = await stripe.checkout.sessions.create({
 		payment_method_types: ["card"],
 		line_items: lineItems,
 		mode: "payment",
 		success_url: successUrl,
 		cancel_url: cancelUrl,
+		metadata: {
+			sub: user.sub || "",
+			knittingPatternSlug: knittingPattern.slug,
+		},
 	});
-	if (session.url) {
-		redirect(session.url);
+	if (!session.url) {
+		log.error({ session }, "セッションの作成に失敗しました");
+		redirect("/cancel");
 	}
-	log.error({ session }, "セッションの作成に失敗しました");
-	redirect("/cancel");
+	redirect(session.url);
 }

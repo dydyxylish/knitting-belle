@@ -1,4 +1,5 @@
-- title: "クリアハンドル・フラワーハンドルバッグ編み図（Clear Handle / Flower Handle Frill Bag）"
+- slug: "clearOrFlowerHandleFrillBag"
+  title: "クリアハンドル・フラワーハンドルバッグ編み図（Clear Handle / Flower Handle Frill Bag）"
   description: |
     🌸Clear Handle & Flower Handle Frill Bag 編み図🌸
 
@@ -34,7 +35,8 @@
   price: 300
   isPublished: true
 
-- title: "シルバーフリルバッグ編み図（Silver Frill Pouch）"
+- slug: "sliverFrillPouch"
+  title: "シルバーフリルバッグ編み図（Silver Frill Pouch）"
   description: |
     メタリックヤーンとクリアハンドルを組み合わせた春夏にぴったりの巾着バッグです♡
     フリルをたくさんつけることで少し個性的な印象にしました！
@@ -55,7 +57,8 @@
   price: 300
   isPublished: true
 
-- title: "ポコポコ巾着バッグ編み図（Puffy Crochet Drawstring Bag）"
+- slug: "puffyCrochetDrawstringBag"
+  title: "ポコポコ巾着バッグ編み図（Puffy Crochet Drawstring Bag）"
   description: |
     ポコポコした編み地がかわいい巾着バッグです🌼
     極太の毛糸を使用するため、初心者の方でも比較的編みやすい編み図になっています！

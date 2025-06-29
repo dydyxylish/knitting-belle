@@ -1,9 +1,11 @@
 import { YarnCraftImageContainer } from "./container";
 
 interface YarnCraftImageProps {
-	knittingPatternId: string;
+	knittingPatternSlug: string;
 }
 
-export const YarnCraftImage = ({ knittingPatternId }: YarnCraftImageProps) => (
-	<YarnCraftImageContainer knittingPatternId={knittingPatternId} />
+export const YarnCraftImage = ({
+	knittingPatternSlug,
+}: YarnCraftImageProps) => (
+	<YarnCraftImageContainer knittingPatternSlug={knittingPatternSlug} />
 );

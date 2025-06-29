@@ -1,3 +1,5 @@
+import { v4 as uuidV4 } from "uuid";
+
 import type { Schema } from "@/amplify/data/resource";
 
 interface YarnCraftImagePresentationProps {
@@ -7,8 +9,7 @@ export const YarnCraftImagePresentation = ({
 	yarnCraftImages,
 }: YarnCraftImagePresentationProps) => {
 	return yarnCraftImages.map((yarnCraftImage) => (
-		<div key={yarnCraftImage.id}>
-			<p>{yarnCraftImage.id}</p>
+		<div key={uuidV4()}>
 			<p>{yarnCraftImage.imagePath}</p>
 			<p>{yarnCraftImage.title}</p>
 			<p>{yarnCraftImage.sortOrder}</p>
