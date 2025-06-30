@@ -1,9 +1,4 @@
-import {
-	a,
-	type ClientSchema,
-	defineData,
-	defineFunction,
-} from "@aws-amplify/backend";
+import { a, type ClientSchema, defineData } from "@aws-amplify/backend";
 
 const schema = a.schema({
 	// 毛糸の作品画像
@@ -28,7 +23,6 @@ const schema = a.schema({
 			title: a.string().required(),
 			description: a.string().required(),
 			attention: a.string(),
-			pdfPath: a.string().required(),
 			price: a.integer().required(),
 			downloadCount: a.integer().default(0),
 			yarnCraftImages: a.hasMany("YarnCraftImage", "knittingPatternSlug"),
@@ -46,8 +40,8 @@ const schema = a.schema({
 			user: a.string().required(), // JWT sub
 			knittingPatternSlug: a.string().required(),
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternSlug"),
-			purchasedAt: a.datetime().required(),
-			paymentIntentId: a.string().required(),
+			purchasedAt: a.datetime(),
+			sessionId: a.string(),
 		})
 		.identifier(["user", "knittingPatternSlug"])
 		.authorization((allow) => [
@@ -56,7 +50,7 @@ const schema = a.schema({
 			allow.owner().to(["read"]),
 		])
 		.secondaryIndexes((index) => [
-			index("paymentIntentId")
+			index("sessionId")
 				.queryField("listByPayment")
 				.name("paymentIntentIdIndex"),
 		]),
@@ -71,13 +65,5 @@ export const data = defineData({
 		apiKeyAuthorizationMode: {
 			expiresInDays: 7,
 		},
-		// lambdaAuthorizationMode: {
-		// 	function: defineFunction({
-		// 		entry: "./custom-authorizer.ts",
-		// 	}),
-		// 	// (Optional) STEP 3
-		// 	// Configure the token's time to live
-		// 	timeToLiveInSeconds: 300,
-		// },
 	},
 });

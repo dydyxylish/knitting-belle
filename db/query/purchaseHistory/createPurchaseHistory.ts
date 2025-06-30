@@ -6,14 +6,14 @@ const log = getLogger(import.meta.url);
 
 export type mutationPurchaseHistoryProps = Pick<
 	Schema["PurchaseHistory"]["type"],
-	"user" | "knittingPatternSlug" | "purchasedAt" | "paymentIntentId"
+	"user" | "knittingPatternSlug" | "purchasedAt" | "sessionId"
 >;
 
 export const mutationPurchaseHistory = async ({
 	user,
 	knittingPatternSlug,
 	purchasedAt,
-	paymentIntentId,
+	sessionId,
 }: mutationPurchaseHistoryProps) => {
 	try {
 		const { data: purchaseHistory, errors } =
@@ -21,7 +21,7 @@ export const mutationPurchaseHistory = async ({
 				user,
 				knittingPatternSlug,
 				purchasedAt,
-				paymentIntentId,
+				sessionId,
 			});
 		if (errors) throw new Error(errors.map((error) => error.message).join(" "));
 

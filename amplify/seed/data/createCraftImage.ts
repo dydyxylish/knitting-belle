@@ -29,12 +29,9 @@ export const createCraftImage = async (dbClient: Client<Schema>) => {
 
 		// 編み図ごとにImagesから該当する画像をfilterしてcreate
 		const result = knittingPatterns.map(async (knittingPattern) => {
-			const fileName = knittingPattern.pdfPath.split("/").pop();
-			const patternName = fileName?.split(".").shift();
-			if (!patternName) return;
 			const createTasks = yarnCraftImages
 				.filter((yarnCraftImage) =>
-					yarnCraftImage.imagePath.includes(patternName),
+					yarnCraftImage.imagePath.includes(knittingPattern.slug),
 				)
 				.map(async (yarnCraftImage) => {
 					const response = await dbClient.models.YarnCraftImage.create({

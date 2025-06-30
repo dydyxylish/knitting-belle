@@ -16,6 +16,7 @@ amplifyConfigure();
 
 const log = getLogger(import.meta.url);
 
+// TODO Parameter Storeから取得
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 
 export async function POST(req: Request) {
@@ -37,23 +38,29 @@ export async function POST(req: Request) {
 
 	// イベントの処理
 	try {
-		await loginAdmin();
-
 		switch (event.type) {
-			case "payment_intent.succeeded": {
-				const paymentIntent = event.data.object;
-				const { sub, knittingPatternSlug } = paymentIntent.metadata;
+			case "checkout.session.completed": {
+				const session = event.data.object;
+				if (
+					!session.metadata ||
+					!session.metadata.sub ||
+					!session.metadata.knittingPatternSlug
+				) {
+					console.warn("Metadataが存在しません:", session.id);
+					throw new Error("Metadataが存在しません");
+				}
 
+				const sub = session.metadata.sub;
+				const knittingPatternSlug = session.metadata.knittingPatternSlug;
+
+				// TODO 並列で高速化
+				await loginAdmin();
 				if (!(await checkKnittingPatternExists(knittingPatternSlug)))
 					throw new Error("編み図が取得できません");
-
 				if (!(await checkUserExistsBySub(sub)))
 					throw new Error("有効なユーザではありません");
-
-				//重複チェック
-				// TODO: 同時にリクエストが来た場合に、コミットメント制御しなければ、重複した購入履歴が作成されてしまう可能性がある？
 				const purchaseHistoryFields = {
-					paymentIntentId: paymentIntent.id,
+					sessionId: session.id,
 					user: sub,
 					knittingPatternSlug: knittingPatternSlug,
 				};
@@ -63,9 +70,10 @@ export async function POST(req: Request) {
 				if (!notExistSamePurchaseHistory)
 					throw new Error("購入履歴が既に存在しています");
 
+				// TODO: 同時にリクエストが来た場合に、コミットメント制御しなければ、重複した購入履歴が作成されてしまう可能性がある？
 				const purchaseHistory = await createPurchaseHistory({
 					...purchaseHistoryFields,
-					purchasedAt: new Date(paymentIntent.created * 1000).toISOString(),
+					purchasedAt: new Date(session.created * 1000).toISOString(),
 				});
 				log.info({ purchaseHistory }, "購入履歴を作成しました");
 

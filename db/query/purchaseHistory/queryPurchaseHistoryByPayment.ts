@@ -4,13 +4,13 @@ import { getLogger } from "@/lib/logger";
 const log = getLogger(import.meta.url);
 
 export interface queryPurchaseHistoryByPaymentProps {
-	paymentIntentId: string;
+	sessionId: string;
 	user: string;
 	knittingPatternSlug: string;
 }
 
 export const queryPurchaseHistoryByPayment = async ({
-	paymentIntentId,
+	sessionId,
 	user,
 	knittingPatternSlug,
 }: queryPurchaseHistoryByPaymentProps) => {
@@ -20,8 +20,8 @@ export const queryPurchaseHistoryByPayment = async ({
 				filter: {
 					or: [
 						{
-							paymentIntentId: {
-								eq: paymentIntentId,
+							sessionId: {
+								eq: sessionId,
 							},
 						},
 						{
@@ -40,14 +40,9 @@ export const queryPurchaseHistoryByPayment = async ({
 				},
 			});
 		if (errors) log.error({ errors }, "error");
-		log.info(
-			{ purchaseHistories },
-			"購入履歴（PaymentIntentId別）を取得しました",
-		);
-
 		return purchaseHistories;
 	} catch (e) {
-		log.error({ e }, "購入履歴（PaymentIntentId別）取得に失敗しました");
-		throw new Error(`購入履歴（PaymentIntentId別）取得に失敗しました`);
+		log.error({ e }, "購入履歴取得に失敗しました");
+		throw new Error(`購入履歴取得に失敗しました`);
 	}
 };

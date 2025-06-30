@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { getCachedKnittingPatternList } from "@/app/_lib/fetch/knittingPattern/getCachedKnittingPatternList";
 import { ConfirmKnittingPattern } from "./_containers/ConfirmKnittingPattern";
 import { PaymentForm } from "./_containers/PaymentForm";

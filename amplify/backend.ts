@@ -33,7 +33,7 @@ backend.addOutput({
 
 const cognitoUserPoolListPolicy = new Policy(
 	backend.auth.stack,
-	"cogintoUserPoolListPolicy",
+	"cognitoUserPoolListPolicy",
 	{
 		policyName: "cognitoUserPoolListPolicy",
 		statements: [

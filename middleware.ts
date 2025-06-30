@@ -11,6 +11,7 @@ export default async function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname;
 
 	// matcher: ["/:knittingPatternId/confirm"],
+	// TODO: confirmのレンダリングが遅い?
 	if (getLastSegment(pathname) === "confirm") {
 		if (await isAuthenticated()) {
 			const res = NextResponse.next();

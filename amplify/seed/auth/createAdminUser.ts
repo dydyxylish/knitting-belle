@@ -18,5 +18,5 @@ export const createAdminUser = async () => {
 		},
 	});
 	await addToUserGroup(adminUser, "admin");
-	// TODO: .envに書き込み　adminUser
+	// TODO: secret managerに　username, password設定
 };

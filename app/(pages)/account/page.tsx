@@ -1,3 +1,10 @@
+import { OwnPurchaseHistory } from "./_containers";
+
 export default function Page() {
-	return <div>Account Page</div>;
+	return (
+		<div>
+			<p>account page</p>
+			<OwnPurchaseHistory />
+		</div>
+	);
 }

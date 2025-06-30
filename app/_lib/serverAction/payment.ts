@@ -27,7 +27,6 @@ export async function makePayment(formData: FormData) {
 	const knittingPattern = await getCachedKnittingPattern(
 		submission.value.knittingPatternSlug,
 	);
-	log.error(knittingPattern);
 	if (knittingPattern instanceof Error) {
 		log.error({ notFoundKnittingPatter: true }, "指定商品が無効です");
 		redirect("/cancel");
@@ -36,7 +35,11 @@ export async function makePayment(formData: FormData) {
 		redirect("/cancel");
 	}
 
-	const successUrl = "http://localhost:3000/thanks";
+	// TODO すでに購入済のユーザが同じ商品を選択していたら、エラー
+
+	// TODO envから取得
+	const successUrl =
+		"http://localhost:3000/thanks?session_id={CHECKOUT_SESSION_ID}";
 	const cancelUrl = "http://localhost:3000/cancel";
 	const lineItems = [
 		{
@@ -65,6 +68,7 @@ export async function makePayment(formData: FormData) {
 			knittingPatternSlug: knittingPattern.slug,
 		},
 	});
+
 	if (!session.url) {
 		log.error({ session }, "セッションの作成に失敗しました");
 		redirect("/cancel");
