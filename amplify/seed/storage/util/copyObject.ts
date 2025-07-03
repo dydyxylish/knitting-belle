@@ -1,4 +1,5 @@
-import { copy, type CopyWithPathInput } from "aws-amplify/storage";
+import { type CopyWithPathInput, copy } from "aws-amplify/storage";
+
 import { getLogger } from "@/lib/logger";
 
 const log = getLogger(import.meta.url);

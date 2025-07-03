@@ -1,0 +1,9 @@
+node_modules
+.git
+.gitignore
+*.md
+.amplify
+.next
+.vscode
+seed-assets
+seed-policy.json

@@ -1,0 +1,8 @@
+<svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="298" height="98" fill="none" stroke="black" stroke-width="1" />
+    <rect x="4" y="4" width="292" height="92" fill="none" stroke="black" stroke-width="1" />
+    <text x="150" y="60" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle"
+        fill="black">
+        KNITTING BELLE
+    </text>
+</svg>

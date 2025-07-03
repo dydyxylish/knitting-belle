@@ -1,4 +1,5 @@
 import { list } from "aws-amplify/storage";
+
 import { copyFile } from "@/amplify/seed/storage/util/copyObject";
 
 export const putKnittingPattern = async () => {
@@ -20,7 +21,7 @@ export const putKnittingPattern = async () => {
 				},
 				destination: {
 					path: `knittingPattern/${knittingPattern.path.split("/").pop()}`,
-					bucket: "knittingBelle",
+					bucket: "knittingPatternBucket",
 				},
 			});
 		});

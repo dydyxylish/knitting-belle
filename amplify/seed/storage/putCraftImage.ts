@@ -1,4 +1,5 @@
 import { list } from "aws-amplify/storage";
+
 import { copyFile } from "@/amplify/seed/storage/util/copyObject";
 
 export const putCraftImage = async () => {
@@ -20,7 +21,7 @@ export const putCraftImage = async () => {
 				},
 				destination: {
 					path: `yarnCraftImage/${image.path.split("/").slice(-2).join("/")}`,
-					bucket: "knittingBelle",
+					bucket: "yarnCraftImageBucket",
 				},
 			});
 		});

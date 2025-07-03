@@ -1,11 +1,9 @@
-import { fileURLToPath } from "node:url";
-import { basename } from "node:path";
 import pino from "pino";
 
 const isBrowser = typeof window !== "undefined";
 const isProduction = process.env.NODE_ENV === "production";
 
-export const logger = isBrowser
+const logger = isBrowser
 	? pino({
 			browser: {
 				asObject: true,
@@ -25,13 +23,11 @@ export const logger = isBrowser
 						colorize: true,
 						translateTime: "yyyy-mm-dd HH:MM:ss.l",
 						ignore: "pid,hostname",
+						timezone: "Asia/Tokyo",
 					},
 				},
 			});
-export function getLogger(moduleUrl: string) {
-	const filePath = fileURLToPath(moduleUrl);
-	const moduleName = basename(filePath);
-	return logger.child({ module: moduleName });
-}
-
-export default logger;
+// 第一引数にimport.meta.urlをわたす想定
+export const getLogger = (moduleUrl: string) => {
+	return logger.child({ module: moduleUrl });
+};
