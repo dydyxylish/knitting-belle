@@ -1,22 +1,38 @@
-import {
-	addToUserGroup,
-	createAndSignUpUser,
-	getSecret,
-} from "@aws-amplify/seed";
+import { addToUserGroup, createAndSignUpUser } from "@aws-amplify/seed";
 
-export const createAdminUser = async () => {
-	// webhook用ユーザ作成
-	const adminUsername = await getSecret("adminUsername");
-	const adminPassword = await getSecret("adminPassword");
-	const adminUser = await createAndSignUpUser({
-		username: adminUsername,
-		password: adminPassword,
-		signInAfterCreation: false,
-		signInFlow: "Password",
-		userAttributes: {
-			locale: "ja",
-		},
-	});
-	await addToUserGroup(adminUser, "admin");
-	// TODO: secret managerに　username, password設定
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(import.meta.url);
+
+interface createAdminUserArgs {
+	username: string;
+	password: string;
+}
+
+export const createAdminUser = async ({
+	username,
+	password,
+}: createAdminUserArgs) => {
+	try {
+		const adminUser = await createAndSignUpUser({
+			username: username,
+			password: password,
+			signInAfterCreation: false,
+			signInFlow: "Password",
+			userAttributes: {
+				locale: "ja",
+			},
+		});
+		await addToUserGroup(adminUser, "admin");
+	} catch (error) {
+		const err = error as Error;
+		if (
+			err.name === "UsernameExistsError" ||
+			err.name === "UsernameExistsException"
+		) {
+			log.warn({ error, username }, "すでにユーザ作成済です");
+		} else {
+			throw err;
+		}
+	}
 };

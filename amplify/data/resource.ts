@@ -14,6 +14,7 @@ const schema = a.schema({
 		.identifier(["imagePath"])
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
+			allow.authenticated().to(["read"]),
 			allow.guest().to(["read"]),
 		]),
 	// 編み図
@@ -32,6 +33,7 @@ const schema = a.schema({
 		.identifier(["slug"])
 		.authorization((allow) => [
 			allow.groups(["admin"]).to(["read", "create", "update"]),
+			allow.authenticated().to(["read"]),
 			allow.guest().to(["read"]),
 		]),
 	// 購入履歴

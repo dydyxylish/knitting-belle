@@ -21,7 +21,7 @@ export const putCraftImage = async () => {
 				},
 				destination: {
 					path: `yarnCraftImage/${image.path.split("/").slice(-2).join("/")}`,
-					bucket: "knittingBelle",
+					bucket: "yarnCraftImageBucket",
 				},
 			});
 		});

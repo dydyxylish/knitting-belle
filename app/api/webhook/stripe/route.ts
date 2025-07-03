@@ -9,15 +9,13 @@ import { checkKnittingPatternExists } from "@/app/_lib/fetch/knittingPattern/che
 import { checkSamePurchaseHistory } from "@/app/_lib/fetch/purchaseHistory/checkSamePurchaseHistory";
 import { checkUserExistsBySub } from "@/app/_lib/fetch/user/checkUserExistsBySub";
 import { loginAdmin } from "@/app/_lib/loginAdmin";
+import { env } from "@/lib/env";
 import { getLogger } from "@/lib/logger";
 import stripe from "@/lib/stripe";
 
 amplifyConfigure();
 
 const log = getLogger(import.meta.url);
-
-// TODO Parameter Storeから取得
-const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 
 export async function POST(req: Request) {
 	// リクエストの検証
@@ -27,7 +25,11 @@ export async function POST(req: Request) {
 	let event: Stripe.Event;
 	try {
 		if (!sig) throw new Error("No signature");
-		event = stripe.webhooks.constructEvent(body, sig, stripeWebhookSecret);
+		event = stripe.webhooks.constructEvent(
+			body,
+			sig,
+			env.STRIPE_WEBHOOK_SECRET,
+		);
 	} catch (error) {
 		const err = error instanceof Error ? error : new Error("Bad Request");
 		log.error({ error }, "不適切なリクエストです");
@@ -52,25 +54,19 @@ export async function POST(req: Request) {
 
 				const sub = session.metadata.sub;
 				const knittingPatternSlug = session.metadata.knittingPatternSlug;
-
-				// TODO 並列で高速化
-				await loginAdmin();
-				if (!(await checkKnittingPatternExists(knittingPatternSlug)))
-					throw new Error("編み図が取得できません");
-				if (!(await checkUserExistsBySub(sub)))
-					throw new Error("有効なユーザではありません");
 				const purchaseHistoryFields = {
 					sessionId: session.id,
 					user: sub,
 					knittingPatternSlug: knittingPatternSlug,
 				};
-				const notExistSamePurchaseHistory = await checkSamePurchaseHistory(
-					purchaseHistoryFields,
-				);
-				if (!notExistSamePurchaseHistory)
-					throw new Error("購入履歴が既に存在しています");
 
-				// TODO: 同時にリクエストが来た場合に、コミットメント制御しなければ、重複した購入履歴が作成されてしまう可能性がある？
+				await loginAdmin();
+				await Promise.all([
+					checkKnittingPatternExists(knittingPatternSlug),
+					checkUserExistsBySub(sub),
+					checkSamePurchaseHistory(purchaseHistoryFields),
+				]);
+
 				const purchaseHistory = await createPurchaseHistory({
 					...purchaseHistoryFields,
 					purchasedAt: new Date(session.created * 1000).toISOString(),

@@ -1,23 +1,35 @@
 import { defineBackend } from "@aws-amplify/backend";
-import { Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import {
+	ArnPrincipal,
+	Effect,
+	Policy,
+	PolicyStatement,
+} from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 
+import { env } from "@/lib/env.js";
 import { auth } from "./auth/resource.js";
 import { data } from "./data/resource.js";
-import { storage } from "./storage/resource.js";
+import {
+	knittingPatternStorage,
+	yarnCraftImageStorage,
+} from "./storage/resource.js";
 
 const backend = defineBackend({
 	auth,
 	data,
-	storage,
+	knittingPatternStorage,
+	yarnCraftImageStorage,
 });
+const adminRole = backend.auth.resources.groups.admin.role;
 
+// 編み図バケットの登録
 const seedBucket = Bucket.fromBucketAttributes(backend.stack, "seedBucket", {
-	bucketArn: "arn:aws:s3:::knitting-belle",
-	region: "ap-northeast-1",
+	bucketArn: env.SEED_BUCKET_ARN,
+	region: env.SEED_BUCKET_REGION,
 });
 
-seedBucket.grantRead(backend.auth.resources.groups.admin.role);
+seedBucket.grantRead(adminRole);
 
 backend.addOutput({
 	storage: {
@@ -31,6 +43,7 @@ backend.addOutput({
 	},
 });
 
+// Cognitoユーザープールへのアクセス権付与
 const cognitoUserPoolListPolicy = new Policy(
 	backend.auth.stack,
 	"cognitoUserPoolListPolicy",
@@ -44,7 +57,28 @@ const cognitoUserPoolListPolicy = new Policy(
 		],
 	},
 );
+adminRole.attachInlinePolicy(cognitoUserPoolListPolicy);
 
-backend.auth.resources.groups.admin.role.attachInlinePolicy(
-	cognitoUserPoolListPolicy,
+// 編み図作品画像へのpublic　access許可、admin roleにput権限付与
+const cfnYarnCraftImageBucket =
+	backend.yarnCraftImageStorage.resources.cfnResources.cfnBucket;
+cfnYarnCraftImageBucket.addPropertyOverride(
+	"PublicAccessBlockConfiguration.BlockPublicPolicy",
+	false,
+);
+cfnYarnCraftImageBucket.addPropertyOverride(
+	"PublicAccessBlockConfiguration.RestrictPublicBuckets",
+	false,
+);
+
+const yarnCraftImageBucket = backend.yarnCraftImageStorage.resources.bucket;
+yarnCraftImageBucket.grantPublicAccess("yarnCraftImage/*");
+yarnCraftImageBucket.addToResourcePolicy(
+	//grantPutだと CloudformationStackCircularDependencyError のため
+	new PolicyStatement({
+		effect: Effect.ALLOW,
+		principals: [new ArnPrincipal(adminRole.roleArn)],
+		actions: ["s3:PutObject"],
+		resources: [`${yarnCraftImageBucket.bucketArn}/yarnCraftImage/*`],
+	}),
 );

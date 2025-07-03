@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import type { Schema } from "@/amplify/data/resource";
 
 interface DetailKnittingPatternPresentationProps {
@@ -16,11 +14,6 @@ export const DetailKnittingPatternPresentation = ({
 			<p>{knittingPattern.title}</p>
 			<p>{knittingPattern.description}</p>
 			{children}
-			<Link href={`${knittingPattern.slug}/confirm`}>
-				<button className="border" type="button">
-					購入確認画面に遷移
-				</button>
-			</Link>
 		</div>
 	);
 };

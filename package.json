@@ -8,16 +8,21 @@
 	},
 	"packageManager": "pnpm@10.12.1",
 	"scripts": {
-		"dev": "next dev",
+		"dev": "dotenvx run -f .env.local -- next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"sandbox": "dotenvx run -f .env.local -- ampx sandbox",
+		"delete": "dotenvx run -f .env.local -- ampx sandbox delete",
+		"seed": "dotenvx run -f .env.local -- ampx sandbox seed --debug"
 	},
 	"dependencies": {
 		"@aws-amplify/adapter-nextjs": "^1.6.4",
 		"@aws-sdk/client-cognito-identity-provider": "^3.839.0",
 		"@conform-to/react": "^1.7.2",
 		"@conform-to/zod": "^1.7.2",
+		"@radix-ui/react-dialog": "^1.1.14",
+		"@radix-ui/react-slot": "^1.2.3",
 		"@tailwindcss/postcss": "^4.1.10",
 		"aws-amplify": "^6.15.1",
 		"class-variance-authority": "^0.7.1",
@@ -45,6 +50,7 @@
 		"@aws-amplify/backend-cli": "^1.8.0",
 		"@aws-amplify/seed": "^1.0.1",
 		"@biomejs/biome": "^2.0.2",
+		"@dotenvx/dotenvx": "^1.45.1",
 		"@types/aws-lambda": "^8.10.150",
 		"@types/node": "^22.15.32",
 		"@types/react": "^19.1.8",

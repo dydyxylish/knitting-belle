@@ -7,7 +7,7 @@ import type { z } from "zod";
 import { makePayment } from "@/app/_lib/serverAction/payment";
 import { paymentSchema } from "@/lib/schema";
 
-export const PaymentFormPresentation = ({
+export const CheckOutButtonPresentation = ({
 	knittingPatternSlug,
 }: z.infer<typeof paymentSchema>) => {
 	const [form, fields] = useForm({

@@ -13,6 +13,7 @@ export const generateSignedUrl = async (path: string) =>
 				path,
 				options: {
 					expiresIn: 300,
+					bucket: "knittingPatternBucket",
 				},
 			});
 			await signOut();

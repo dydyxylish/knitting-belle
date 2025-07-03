@@ -1,10 +1,11 @@
+import "server-only";
+
 import Stripe from "stripe";
 
-const createStripe = () => {
-	// TODO Parameter Storeから取得
-	if (!process.env.STRIPE_TEST_MODE_API_KEY)
-		throw Error(".envファイルにSTRIPE_TEST_MODE_API_KEYを追記してください");
-	return new Stripe(process.env.STRIPE_TEST_MODE_API_KEY);
+import { env } from "./env";
+
+const createStripe = async () => {
+	return new Stripe(env.STRIPE_API_KEY);
 };
 
-export default createStripe();
+export default await createStripe();

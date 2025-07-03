@@ -3,6 +3,7 @@ import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { Amplify } from "aws-amplify";
 
 import outputs from "@/amplify_outputs.json";
+import { env } from "@/lib/env";
 
 export const amplifyConfigure = () => {
 	Amplify.configure(outputs);
@@ -13,7 +14,7 @@ export const { runWithAmplifyServerContext, createAuthRouteHandlers } =
 		config: outputs,
 		runtimeOptions: {
 			cookies: {
-				domain: "localhost", // making cookies available to all subdomains
+				domain: env.COOKIE_DOMAIN, // making cookies available to all subdomains
 				sameSite: "strict",
 				maxAge: 60 * 60 * 24 * 7, // 7 days
 			},

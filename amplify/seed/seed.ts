@@ -1,9 +1,5 @@
 import { readFile } from "node:fs/promises";
-import {
-	addToUserGroup,
-	createAndSignUpUser,
-	getSecret,
-} from "@aws-amplify/seed";
+import { getSecret } from "@aws-amplify/seed";
 import { Amplify } from "aws-amplify";
 import { deleteUser, signIn } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
@@ -24,29 +20,28 @@ Amplify.configure(outputs);
 const dbClient = generateClient<Schema>();
 const log = getLogger(import.meta.url);
 
-const seedUsername = await getSecret("seedUsername");
-const seedPassword = await getSecret("seedPassword");
+const SEED_USERNAME = await getSecret("SEED_USERNAME");
+const SEED_PASSWORD = await getSecret("SEED_PASSWORD");
+const ADMIN_USERNAME = await getSecret("ADMIN_USERNAME");
+const ADMIN_PASSWORD = await getSecret("ADMIN_PASSWORD");
 
 try {
-	const user = await createAndSignUpUser({
-		username: seedUsername,
-		password: seedPassword,
-		signInAfterCreation: false,
-		signInFlow: "Password",
-		userAttributes: {
-			locale: "ja",
-		},
+	await createAdminUser({
+		username: SEED_USERNAME,
+		password: SEED_PASSWORD,
 	});
-	await addToUserGroup(user, "admin");
+	await createAdminUser({
+		username: ADMIN_USERNAME,
+		password: ADMIN_PASSWORD,
+	});
 	await signIn({
-		username: seedUsername,
-		password: seedPassword,
+		username: SEED_USERNAME,
+		password: SEED_PASSWORD,
 	});
 
 	await Promise.all([putKnittingPattern(), putCraftImage()]);
 	await createKnittingPattern(dbClient);
 	await createCraftImage(dbClient);
-	await createAdminUser();
 } finally {
 	try {
 		await deleteUser();

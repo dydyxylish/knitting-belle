@@ -21,7 +21,7 @@ export const putKnittingPattern = async () => {
 				},
 				destination: {
 					path: `knittingPattern/${knittingPattern.path.split("/").pop()}`,
-					bucket: "knittingBelle",
+					bucket: "knittingPatternBucket",
 				},
 			});
 		});
