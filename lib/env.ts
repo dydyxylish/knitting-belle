@@ -29,6 +29,7 @@ const EnvSchema = z.object({
 	ADMIN_PASSWORD: z.string(),
 	STRIPE_API_KEY: z.string(),
 	STRIPE_WEBHOOK_SECRET: z.string(),
+	INSTAGRAM_URL: z.string(),
 });
 
 export const env = EnvSchema.parse(process.env);

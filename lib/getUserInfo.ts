@@ -3,7 +3,7 @@ import { fetchUserAttributes } from "aws-amplify/auth/server";
 import { cookies } from "next/headers";
 
 import { getLogger } from "@/lib/logger";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../app/_lib/amplifyServerUtils";
 
 export const dynamic = "force-dynamic";
 

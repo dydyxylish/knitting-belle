@@ -9,10 +9,10 @@ import { isAuthenticated } from "@/lib/isAuthenticated";
 import { getLogger } from "@/lib/logger";
 import { paymentSchema } from "@/lib/schema";
 import stripe from "@/lib/stripe";
+import { getCurrentUserInfo } from "../../../lib/getUserInfo";
 import { getKnittingPattern } from "../fetch/knittingPattern/getKnittingPattern";
 import { hasAlreadyKnittingPattern } from "../fetch/purchaseHistory/hasAlreadyKnittingPattern";
-import { getCurrentUserInfo } from "../fetch/user/getUserInfo";
-import { getImagePaths } from "../fetch/yarnCraftImage/getImagePaths";
+import { getImagePathsBySlugWithCookie } from "../fetch/yarnCraftImage/getImagePathsBySlugWithCookie";
 
 const log = getLogger(import.meta.url);
 
@@ -55,7 +55,7 @@ export async function makePayment(formData: FormData) {
 		// TODO 「すでに購入済です」エラーをフロントに返し、画面表示
 	}
 
-	const images = await getImagePaths(knittingPattern.slug);
+	const images = await getImagePathsBySlugWithCookie(knittingPattern.slug);
 	const lineItems = [
 		{
 			price_data: {
