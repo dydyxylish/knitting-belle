@@ -5,15 +5,14 @@ import { useEffect, useState } from "react";
 
 import instagram from "@/public/instagram.json";
 
+const options: LottieOptions = {
+	animationData: instagram,
+	loop: false,
+	autoplay: false,
+};
+
 export const InstagramLottie = () => {
 	const [hasPlayed, setHasPlayed] = useState(false);
-
-	const options: LottieOptions = {
-		animationData: instagram,
-		loop: false,
-		autoplay: false,
-	};
-
 	const { View, play, animationContainerRef } = useLottie(options);
 
 	useEffect(() => {

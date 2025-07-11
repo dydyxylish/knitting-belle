@@ -2,7 +2,7 @@
 
 import type { mutationPurchaseHistoryProps } from "@/db/query/purchaseHistory/createPurchaseHistory";
 import { createPurchaseHistory as repositoryCreatePurchaseHistory } from "@/db/repository/purchaseHistory/createPurchaseHistory";
-import { runWithAmplifyServerContext } from "../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../createAmplifyServerRunner";
 
 export const createPurchaseHistory = async (
 	props: mutationPurchaseHistoryProps,

@@ -1,7 +1,7 @@
 import { signOut } from "aws-amplify/auth";
 import { getUrl } from "aws-amplify/storage";
 
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 import { loginAdmin } from "../../loginAdmin";
 
 export const generateSignedUrl = async (path: string) =>

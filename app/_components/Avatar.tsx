@@ -1,4 +1,4 @@
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, UserCheck2 } from "lucide-react";
 import Image from "next/image";
 
 import { isAuthenticated } from "@/lib/isAuthenticated";
@@ -13,12 +13,13 @@ export const Avatar = async () => {
 				<Image
 					src={userProfile.picture}
 					alt="userPicture"
-					className="rounded-full"
+					className="rounded-full outline outline-white active:outline-gray-300 active:grayscale"
 					width={32}
 					height={32}
 				/>
 			);
 		}
+		return <UserCheck2 className="size-6" style={{ opacity: 0.4 }} />;
 	}
 	return <CircleUserRound className="size-6" style={{ opacity: 0.4 }} />;
 };

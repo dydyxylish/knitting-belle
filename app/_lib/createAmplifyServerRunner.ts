@@ -1,13 +1,8 @@
 import "server-only";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
-import { Amplify } from "aws-amplify";
 
 import outputs from "@/amplify_outputs.json";
 import { env } from "@/lib/env";
-
-export const amplifyConfigure = () => {
-	Amplify.configure(outputs);
-};
 
 export const { runWithAmplifyServerContext, createAuthRouteHandlers } =
 	createServerRunner({

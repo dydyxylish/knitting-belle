@@ -5,7 +5,7 @@ import "./globals.css";
 
 import { Footer } from "./_components/Footer";
 import { Header } from "./_components/Header";
-import { amplifyConfigure } from "./_lib/amplifyServerUtils";
+import { amplifyConfigure } from "./_lib/configureAmplify";
 import { cn } from "./_lib/tailwindUtils";
 
 const inter = Inter({ subsets: ["latin"] });

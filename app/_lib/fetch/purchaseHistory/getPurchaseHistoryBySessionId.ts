@@ -1,6 +1,6 @@
 import type { queryPurchaseHistoryBySessionProps } from "@/db/query/purchaseHistory/queryPurchaseHistoryBySession";
 import { getPurchasedHistoryBySession } from "@/db/repository/purchaseHistory/getPurchaseHIstoryBySession";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 import { loginAdmin } from "../../loginAdmin";
 
 export const getPurchaseHistoryBySessionId = async (

@@ -1,7 +1,7 @@
 import { orderBy } from "es-toolkit";
 import { unstable_cache } from "next/cache";
 
-import { runWithAmplifyServerContext } from "@/app/_lib/amplifyServerUtils";
+import { runWithAmplifyServerContext } from "@/app/_lib/createAmplifyServerRunner";
 import { getYarnCraftImagesBySortOrder } from "@/db/repository/yarnCraftImage/getYarnCraftImagesBySortOrder";
 
 export const getTopYarnCraftImage = unstable_cache(

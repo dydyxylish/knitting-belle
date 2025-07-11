@@ -27,20 +27,26 @@ export async function makePayment(formData: FormData) {
 		redirect("/cancel");
 	}
 
+	if (!(await isAuthenticated())) {
+		log.error({ isAuthenticated: false }, "セッションがきれています");
+		return submission.reply({
+			fieldErrors: {
+				sessionError: ["セッションがきれています。再度ログインしてください"],
+			},
+		});
+	}
+
 	const knittingPattern = await getKnittingPattern(
 		submission.value.knittingPatternSlug,
 	);
 	if (!knittingPattern) {
 		log.error({ notFoundKnittingPatter: true }, "指定商品が無効です");
 		redirect("/cancel");
-	} else if (!isAuthenticated()) {
-		log.error({ isAuthenticated: false }, "セッションがきれています");
-		redirect("/cancel");
 	}
 
-	// すでに購入済のユーザが同じ商品を選択していたら、エラー
 	const user = await getCurrentUserInfo();
 	if (!user) redirect("/cancel");
+	// すでに購入済のユーザが同じ商品を選択していたら、エラー
 	if (
 		user.sub &&
 		(await hasAlreadyKnittingPattern({
@@ -50,9 +56,13 @@ export async function makePayment(formData: FormData) {
 	) {
 		log.warn(
 			{ user, knittingPattern },
-			`ユーザ${user.email}は${knittingPattern.slug}をすでに購入済です`,
+			`ユーザ${user.email}は${knittingPattern.slug}を購入済みです`,
 		);
-		// TODO 「すでに購入済です」エラーをフロントに返し、画面表示
+		return submission.reply({
+			fieldErrors: {
+				duplicateError: [`お客様は、こちらの編み図を既に購入済みです`],
+			},
+		});
 	}
 
 	const images = await getImagePathsBySlugWithCookie(knittingPattern.slug);

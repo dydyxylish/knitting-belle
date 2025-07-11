@@ -67,7 +67,8 @@ const config: Config = {
 				"6": "6px",
 			},
 			fontFamily: {
-				kiwi: ['"Kiwi Maru"', "sans-serif"],
+				kiwi: ["Kiwi Maru", "sans-serif"],
+				league: ["League Script", "sans-serif"],
 			},
 			fontSize: {
 				tiny: "0.625rem",

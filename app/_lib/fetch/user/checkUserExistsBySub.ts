@@ -5,7 +5,7 @@ import {
 import { fetchAuthSession } from "aws-amplify/auth";
 
 import outputs from "@/amplify_outputs.json";
-import { runWithAmplifyServerContext } from "@/app/_lib/amplifyServerUtils";
+import { runWithAmplifyServerContext } from "@/app/_lib/createAmplifyServerRunner";
 import { loginAdmin } from "@/app/_lib/loginAdmin";
 import { getLogger } from "@/lib/logger";
 

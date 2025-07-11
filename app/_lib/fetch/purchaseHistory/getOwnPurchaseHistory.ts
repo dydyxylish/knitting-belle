@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 import { getPurchaseHistoryByOwner } from "@/db/repository/purchaseHistory/getPurchaseHistoryByOwner";
 import { getLogger } from "@/lib/logger";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 
 const log = getLogger(import.meta.url);
 

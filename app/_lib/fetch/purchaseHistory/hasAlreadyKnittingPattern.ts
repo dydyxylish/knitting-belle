@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { getPurchaseHistoryByOwnerKp } from "@/db/repository/purchaseHistory/getPurchaseHistoryByOwnerKp";
 import { getLogger } from "@/lib/logger";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 
 interface hasAlreadyKnittingPatternArgs {
 	user: string;

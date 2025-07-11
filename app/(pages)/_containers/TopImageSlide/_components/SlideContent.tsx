@@ -29,7 +29,7 @@ export const SlideContent = ({ topImages }: SlideContentProps) => (
 					alt={img.alt}
 					width={500}
 					height={500}
-					priority
+					{...{ priority: index === 0 ? true : undefined }}
 					className={cn(
 						"mx-auto origin-center rounded-sm border-[14px] border-white border-b-[50px] shadow-xl",
 						getRotateDeg(index),

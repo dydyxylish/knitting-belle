@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
-import { amplifyConfigure } from "@/app/_lib/amplifyServerUtils";
+import { amplifyConfigure } from "@/app/_lib/configureAmplify";
 import { createPurchaseHistory } from "@/app/_lib/create/createPurchaseHistory";
 import { checkKnittingPatternExists } from "@/app/_lib/fetch/knittingPattern/checkKnittingPatternExists";
 import { checkSamePurchaseHistory } from "@/app/_lib/fetch/purchaseHistory/checkSamePurchaseHistory";

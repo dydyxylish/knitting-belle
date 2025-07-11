@@ -12,7 +12,7 @@ export const getKnittingPatternsBySlugsLoader = cache(
 			return slugs.map(
 				(slug) =>
 					knittingPatternMap[slug] ||
-					new Error(`slug: ${slug}に該当するslugが存在しません`),
+					new Error(`slug: ${slug}に該当するKnittingPatternが存在しません`),
 			);
 		}),
 );

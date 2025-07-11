@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 
-import { runWithAmplifyServerContext } from "@/app/_lib/amplifyServerUtils";
+import { runWithAmplifyServerContext } from "@/app/_lib/createAmplifyServerRunner";
 import { getKnittingPattern } from "@/db/repository/knittingPattern/getKnittingPattern";
 
 export const getCachedKnittingPattern = unstable_cache(

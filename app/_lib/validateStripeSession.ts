@@ -8,7 +8,7 @@ export async function validateStripeSession(sessionId: string) {
 		// DBに記録された購入情報を確認（Webhooksで保存したもの）
 		return await poolingPurchaseHistory(sessionId);
 	} catch (error) {
-		log.error({ error }, "セッションの確認に失敗しました");
-		return null;
+		log.error({ error }, "購入情報の確認に失敗しました");
+		throw new Error("購入情報の確認に失敗しました");
 	}
 }

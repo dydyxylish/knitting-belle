@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { validateStripeSession } from "@/app/_lib/validateStripeSession";
 import { getLogger } from "@/lib/logger";
 import { DownloadLink } from "../DownloadLink";
+import { OrderSummary } from "../OrderSummary";
 import { ValidateWrapperPresentation } from "./presentation";
 
 const log = getLogger(import.meta.url);
@@ -22,9 +23,9 @@ export const ValidateWrapperContainer = async ({
 		throw new Error("購入履歴データが作成されていません");
 	}
 	return (
-		<ValidateWrapperPresentation purchaseHistory={purchaseHistory}>
+		<ValidateWrapperPresentation>
 			<DownloadLink purchaseHistory={purchaseHistory} />
-			{/* <OrderSummary /> */}
+			<OrderSummary purchaseHistory={purchaseHistory} />
 		</ValidateWrapperPresentation>
 	);
 };

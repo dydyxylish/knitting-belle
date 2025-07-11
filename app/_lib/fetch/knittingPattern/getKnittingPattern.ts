@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { getKnittingPatternCookie } from "@/db/repository/knittingPattern/getKnittingPatternCookie";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 
 export const getKnittingPattern = async (slug: string) => {
 	return await runWithAmplifyServerContext({

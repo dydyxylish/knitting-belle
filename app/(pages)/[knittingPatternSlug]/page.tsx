@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
 
 import { getCachedKnittingPatternList } from "@/app/_lib/fetch/knittingPattern/getCachedKnittingPatternList";
@@ -18,9 +19,11 @@ export default async function Page({
 	return (
 		<>
 			<DetailKnittingPattern slug={slug} />
-			<Suspense fallback="loooooooooading">
-				<AuthOrCheckOut knittingPatternSlug={slug} />
-			</Suspense>
+			<div className="mt-12 flex flex-col items-center">
+				<Suspense fallback={<Loader2 className="animate-spin" />}>
+					<AuthOrCheckOut knittingPatternSlug={slug} />
+				</Suspense>
+			</div>
 		</>
 	);
 }

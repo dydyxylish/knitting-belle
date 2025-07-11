@@ -1,4 +1,4 @@
-import { Heart, JapaneseYen } from "lucide-react";
+import { Download, JapaneseYen } from "lucide-react";
 import Link from "next/link";
 
 import type { Schema } from "@/amplify/data/resource";
@@ -18,9 +18,9 @@ export const KnittingPatternPresentation = ({
 			<CardDescription className="mx-8 whitespace-normal break-words font-kiwi">
 				<Link href={`/${knittingPattern.slug}`}>{knittingPattern.title}</Link>
 			</CardDescription>
-			<CardFooter className="flex w-full justify-end gap-8 px-8">
-				<div className="flex gap-2">
-					<Heart size={18} />
+			<CardFooter className="flex w-full justify-end gap-8 px-8 font-mono text-gray-500">
+				<div className="flex gap-1">
+					<Download size={18} />
 					<span className="text-sm">{knittingPattern.downloadCount}</span>
 				</div>
 				<div className="flex">
