@@ -1,4 +1,3 @@
-import { signOut } from "aws-amplify/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
@@ -83,7 +82,5 @@ export async function POST(req: Request) {
 		return new NextResponse("イベントのハンドルに失敗しました", {
 			status: 400,
 		});
-	} finally {
-		await signOut();
 	}
 }

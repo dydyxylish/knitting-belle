@@ -2,12 +2,12 @@
 import { omit } from "es-toolkit";
 
 import { generateImageUrl } from "@/app/_lib/fetch/yarnCraftImage/generateImageUrl";
-import { getTopYarnCraftImage } from "@/app/_lib/fetch/yarnCraftImage/getTopYarnCraftImage";
+import { getAllTopYarnCraftImage } from "@/app/_lib/fetch/yarnCraftImage/getAllTopYarnCraftImage";
 import { SlideContent } from "./_components/SlideContent";
 import { TopImageSlidePresentation } from "./presentation";
 
 export const TopImageSlideContainer = async () => {
-	const topImages = await getTopYarnCraftImage();
+	const topImages = await getAllTopYarnCraftImage();
 	return (
 		<TopImageSlidePresentation>
 			<SlideContent

@@ -1,22 +1,37 @@
-import { signOut } from "aws-amplify/auth";
 import { getUrl } from "aws-amplify/storage";
+import dayjs from "dayjs";
 
+import { updatePurchaseHistorySignedUrl } from "@/db/repository/purchaseHistory/updatePurchaseHistorySignedUrl";
+import { env } from "@/lib/env";
 import { runWithAmplifyServerContext } from "../../createAmplifyServerRunner";
 import { loginAdmin } from "../../loginAdmin";
 
-export const generateSignedUrl = async (path: string) =>
+export interface generateSignedUrlArgs {
+	knittingPatternSlug: string;
+	user: string;
+}
+
+export const generateSignedUrl = async ({
+	knittingPatternSlug,
+	user,
+}: generateSignedUrlArgs) =>
 	await runWithAmplifyServerContext({
 		nextServerContext: null,
 		async operation() {
 			await loginAdmin();
 			const knittingPatternPdf = await getUrl({
-				path,
+				path: `knittingPattern/${knittingPatternSlug}.pdf`,
 				options: {
-					expiresIn: 300,
+					expiresIn: 60 * 60 * env.SIGNED_URL_EXPIRE_HOUR,
 					bucket: "knittingPatternBucket",
 				},
 			});
-			await signOut();
-			return knittingPatternPdf.url;
+			await updatePurchaseHistorySignedUrl({
+				knittingPatternSlug,
+				user,
+				expireAt: dayjs(knittingPatternPdf.expiresAt).toISOString(),
+				signedUrl: knittingPatternPdf.url.href,
+			});
+			return knittingPatternPdf.url.href;
 		},
 	});

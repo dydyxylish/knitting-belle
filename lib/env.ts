@@ -30,6 +30,12 @@ const EnvSchema = z.object({
 	STRIPE_API_KEY: z.string(),
 	STRIPE_WEBHOOK_SECRET: z.string(),
 	INSTAGRAM_URL: z.string(),
+	SIGNED_URL_EXPIRE_HOUR: z
+		.string()
+		.transform((val) => Number(val))
+		.refine((val) => Number.isInteger(val) && val > 0, {
+			message: "SIGNED_URL_EXPIRE_HOUR は正の整数である必要があります",
+		}),
 });
 
 export const env = EnvSchema.parse(process.env);

@@ -1,17 +1,17 @@
 import type { Schema } from "@/amplify/data/resource";
 import { getSignedUrl } from "@/app/_lib/fetch/purchaseHistory/getSignedUrl";
-import { DownloadLinkPresentation } from "./presentation";
+import { DownloadButtonPresentation } from "./presentation";
 
-export interface DownloadLinkContainerProps {
+export interface DownloadButtonContainerProps {
 	purchaseHistory: Schema["PurchaseHistory"]["type"];
 }
 
-export const DownloadLinkContainer = async ({
+export const DownloadButtonContainer = async ({
 	purchaseHistory,
-}: DownloadLinkContainerProps) => {
+}: DownloadButtonContainerProps) => {
 	const url = await getSignedUrl({ purchaseHistory });
 	return (
-		<DownloadLinkPresentation
+		<DownloadButtonPresentation
 			url={url}
 			filename={`${purchaseHistory.knittingPatternSlug}.pdf`}
 		/>

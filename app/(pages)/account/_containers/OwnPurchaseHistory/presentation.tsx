@@ -1,15 +1,20 @@
-import { v4 as uuidV4 } from "uuid";
-
-import type { Schema } from "@/amplify/data/resource";
+import { Loader2 } from "lucide-react";
+import React, { Suspense } from "react";
 
 interface OwnPurchaseHistoryPresentationProps {
-	purchaseHistories: Schema["PurchaseHistory"]["type"][];
+	children: React.ReactNode;
 }
 
 export const OwnPurchaseHistoryPresentation = ({
-	purchaseHistories,
-}: OwnPurchaseHistoryPresentationProps) => {
-	return purchaseHistories.map((purchaseHistory) => (
-		<p key={uuidV4()}>{purchaseHistory.knittingPatternSlug}</p>
-	));
-};
+	children,
+}: OwnPurchaseHistoryPresentationProps) => (
+	<div className="mt-8 flex flex-col items-center gap-4 px-4">
+		{React.Children.count(children) > 0 ? (
+			<Suspense fallback={<Loader2 className="animate-spin" />}>
+				{children}
+			</Suspense>
+		) : (
+			<p className="font-kiwi text-slate-600">ご購入済みの編み図はありません</p>
+		)}
+	</div>
+);

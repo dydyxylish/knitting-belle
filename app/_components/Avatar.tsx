@@ -4,6 +4,7 @@ import Image from "next/image";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { getCurrentUserInfo } from "../../lib/getUserInfo";
 
+// TODO: Thanksでcookie使えないから、アイコン表示されない
 export const Avatar = async () => {
 	const isLogin = await isAuthenticated();
 	if (isLogin) {

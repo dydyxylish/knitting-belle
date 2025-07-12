@@ -38,30 +38,9 @@ export default function PurchaseTable({
 								{dayjs(purchasedAt).format("YYYY年M月D日 HH:mm")}
 							</TableCell>
 						</TableRow>
-						{/* <TableRow className="*:border-border hover:bg-transparent [&>:not(:last-child)]:border-r">
-							<TableCell className="bg-muted/50 py-2 font-medium">
-								Location
-							</TableCell>
-							<TableCell className="py-2">Seoul, KR</TableCell>
-						</TableRow>
-						<TableRow className="*:border-border hover:bg-transparent [&>:not(:last-child)]:border-r">
-							<TableCell className="bg-muted/50 py-2 font-medium">
-								Status
-							</TableCell>
-							<TableCell className="py-2">Active</TableCell>
-						</TableRow>
-						<TableRow className="*:border-border hover:bg-transparent [&>:not(:last-child)]:border-r">
-							<TableCell className="bg-muted/50 py-2 font-medium">
-								Balance
-							</TableCell>
-							<TableCell className="py-2">$1,000.00</TableCell>
-						</TableRow> */}
 					</TableBody>
 				</Table>
 			</div>
-			{/* <p className="mt-4 text-center text-muted-foreground text-sm">
-				Vertical table
-			</p> */}
 		</div>
 	);
 }

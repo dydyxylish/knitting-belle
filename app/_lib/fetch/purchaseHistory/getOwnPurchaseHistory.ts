@@ -1,4 +1,4 @@
-import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth/server";
+import { fetchUserAttributes } from "aws-amplify/auth/server";
 import { cookies } from "next/headers";
 
 import { getPurchaseHistoryByOwner } from "@/db/repository/purchaseHistory/getPurchaseHistoryByOwner";
@@ -12,8 +12,6 @@ export const getOwnPurchaseHistory = async () =>
 		nextServerContext: { cookies },
 		operation: async (contextSpec) => {
 			const { sub } = await fetchUserAttributes(contextSpec);
-			const cx = await getCurrentUser(contextSpec);
-			log.info({ cx }, "cx");
 			if (!sub) {
 				log.error({ sub }, "認証情報が取得できません");
 				return [];

@@ -12,7 +12,7 @@ export const DownloadLinkPresentation = ({
 	filename,
 }: DownloadLinkPresentationProps) => {
 	return (
-		<Button className="h-10 bg-amber-200 shadow-md">
+		<Button variant="download" className="h-10">
 			<a
 				href={url}
 				download={filename}

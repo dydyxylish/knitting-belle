@@ -44,6 +44,8 @@ const schema = a.schema({
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternSlug"),
 			purchasedAt: a.datetime(),
 			sessionId: a.string(),
+			expireAt: a.datetime(), //署名付きURLの有効期限
+			signedUrl: a.string(),
 		})
 		.identifier(["user", "knittingPatternSlug"])
 		.authorization((allow) => [
