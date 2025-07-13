@@ -17,7 +17,7 @@ export const createAdminUser = async ({
 		const adminUser = await createAndSignUpUser({
 			username: username,
 			password: password,
-			signInAfterCreation: false,
+			signInAfterCreation: true,
 			signInFlow: "Password",
 			userAttributes: {
 				locale: "ja",

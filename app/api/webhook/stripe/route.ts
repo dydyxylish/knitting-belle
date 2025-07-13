@@ -5,9 +5,11 @@ import type Stripe from "stripe";
 import { amplifyConfigure } from "@/app/_lib/configureAmplify";
 import { createPurchaseHistory } from "@/app/_lib/create/createPurchaseHistory";
 import { checkKnittingPatternExists } from "@/app/_lib/fetch/knittingPattern/checkKnittingPatternExists";
+import { getKnittingPatternWithAuth } from "@/app/_lib/fetch/knittingPattern/getKnittingPatternWithAuth";
 import { checkSamePurchaseHistory } from "@/app/_lib/fetch/purchaseHistory/checkSamePurchaseHistory";
 import { checkUserExistsBySub } from "@/app/_lib/fetch/user/checkUserExistsBySub";
 import { loginAdmin } from "@/app/_lib/loginAdmin";
+import { updateDownloadCount } from "@/app/_lib/update/updateDownloadCount";
 import { env } from "@/lib/env";
 import { getLogger } from "@/lib/logger";
 import stripe from "@/lib/stripe";
@@ -71,6 +73,16 @@ export async function POST(req: Request) {
 					purchasedAt: new Date(session.created * 1000).toISOString(),
 				});
 				log.info({ purchaseHistory }, "購入履歴を作成しました");
+
+				// TODO: [REFACTOR]上でもknittingPattern取得しているため重複している
+				// ダウンロード数+1
+				const knittingPattern =
+					await getKnittingPatternWithAuth(knittingPatternSlug);
+				if (!knittingPattern) throw new Error("編み図が取得できません");
+				await updateDownloadCount({
+					slug: knittingPattern?.slug,
+					downloadCount: (knittingPattern.downloadCount || 0) + 1,
+				});
 
 				break;
 			}

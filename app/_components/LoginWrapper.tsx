@@ -4,7 +4,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 
 interface LoginWrapperProps {
 	children: React.ReactNode;
-	provider: "Google";
+	provider: "Google" | "Email";
 }
 
 export const LoginWrapper = ({ children, provider }: LoginWrapperProps) => {
@@ -24,9 +24,13 @@ const LoginAnchorLink = ({ children, provider }: LoginWrapperProps) => {
 		setCookie("redirectTo", window.location.href);
 		window.location.href = event.currentTarget.href;
 	};
+	const href =
+		provider === "Email"
+			? `/api/auth/sign-in?lang=ja`
+			: `/api/auth/sign-in?lang=ja&provider=${provider}`;
 
 	return (
-		<a href={`/api/auth/sign-in?provider=${provider}`} onClick={onClickLogin}>
+		<a href={href} onClick={onClickLogin}>
 			{children}
 		</a>
 	);

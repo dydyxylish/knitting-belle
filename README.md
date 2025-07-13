@@ -32,8 +32,6 @@ pnpm ampx sandbox secret KEY
 ```
 - KEYS
 ```
-SEED_USERNAME
-SEED_PASSWORD # Cognito標準のパスワードポリシーに準拠
 ADMIN_USERNAME
 ADMIN_PASSWORD # Cognito標準のパスワードポリシーに準拠
 
@@ -77,6 +75,12 @@ STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 ❯ pnpm dotenvx run --env-file=.env.local -- ampx sandbox seed --debug
 ```
 
+#### Cognito Managed Loginを設定
+- AWS Console - Cognito - UserPool から、作成されたユーザープールを選択する
+- ブランディング - ドメイン から、Cognitoドメインのブランディングバージョンを「マネージドログイン」に変更する
+  - カスタムドメインを追加する場合は不要
+
+
 #### Next.js開発サーバを起動
 ```
 ❯ pnpm run dev
@@ -115,4 +119,11 @@ STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 ```
 
 - Amplify.ymlにて、.envファイルに追記するよう指定する
-    - [指定方法](https://docs.amplify.aws/nextjs/deploy-and-host/fullstack-branching/secrets-and-vars/#branch-environment-2)
+    - [指定方法](https://docs.amplify.aws/nextjs/deploy-and-host/fullstack-branching/secrets-and-vars/#branch-environment-2)o
+
+
+### (参考)Cognito Managed Login Branding Settingの出力
+- 以下をcloud shell で実行し、ファイルをダウンロードする
+```
+~ $ aws cognito-idp describe-managed-login-branding-by-client --user-pool-id ap-northeast-1_XXXXXXXX --client-id XXXXXXXXXXXXXXXXXXXXXXXXX | jq .ManagedLoginBranding.Settings > managedLoginBrandingSettings.json
+```

@@ -8,11 +8,11 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import { LoginDialog } from "@/app/_components/LoginDialog";
 import { Button } from "@/app/_components/ui/button";
 import { Toaster } from "@/app/_components/ui/sonner";
 import { makePayment } from "@/app/_lib/serverAction/payment";
 import { paymentSchema } from "@/lib/schema";
-import { LoginDialog } from "../AuthOrCheckOut/presentation";
 
 export const CheckOutButtonPresentation = ({
 	knittingPatternSlug,

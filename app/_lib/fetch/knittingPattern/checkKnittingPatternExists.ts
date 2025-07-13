@@ -6,6 +6,7 @@ const log = getLogger(import.meta.url);
 export const checkKnittingPatternExists = async (slug: string) => async () => {
 	if (await isPublishedKnittingPattern(slug)) return Promise.resolve();
 	log.error({ slug }, `slug: ${slug}に該当する有効な編み図がありません`);
+	return Promise.reject();
 };
 
 const isPublishedKnittingPattern = async (slug: string) => {

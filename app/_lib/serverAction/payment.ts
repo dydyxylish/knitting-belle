@@ -72,7 +72,6 @@ export async function makePayment(formData: FormData) {
 				currency: "jpy",
 				product_data: {
 					name: knittingPattern.title,
-					description: knittingPattern.description,
 					images: images.slice(0, 1),
 				},
 				unit_amount: knittingPattern.price,

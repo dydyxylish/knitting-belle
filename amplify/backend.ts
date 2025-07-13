@@ -1,4 +1,5 @@
 import { defineBackend } from "@aws-amplify/backend";
+import * as cognito from "aws-cdk-lib/aws-cognito";
 import {
 	ArnPrincipal,
 	Effect,
@@ -8,6 +9,7 @@ import {
 import { Bucket } from "aws-cdk-lib/aws-s3";
 
 import { env } from "@/lib/env.js";
+import managedLoginSettings from "./auth/managedLoginBrandingSettings.json";
 import { auth } from "./auth/resource.js";
 import { data } from "./data/resource.js";
 import {
@@ -81,4 +83,16 @@ yarnCraftImageBucket.addToResourcePolicy(
 		actions: ["s3:PutObject"],
 		resources: [`${yarnCraftImageBucket.bucketArn}/yarnCraftImage/*`],
 	}),
+);
+
+// TODO: カスタムドメイン追加時に、マネージドログインを有効化
+// TODO: 検証メッセージ(メールテンプレート)を日本語化
+new cognito.CfnManagedLoginBranding(
+	backend.auth.stack,
+	"KnittingBelleManagedLoginBranding",
+	{
+		userPoolId: backend.auth.resources.userPool.userPoolId,
+		clientId: backend.auth.resources.userPoolClient.userPoolClientId,
+		settings: managedLoginSettings,
+	},
 );

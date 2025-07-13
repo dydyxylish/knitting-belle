@@ -20,23 +20,13 @@ Amplify.configure(outputs);
 const dbClient = generateClient<Schema>();
 const log = getLogger(import.meta.url);
 
-const SEED_USERNAME = await getSecret("SEED_USERNAME");
-const SEED_PASSWORD = await getSecret("SEED_PASSWORD");
 const ADMIN_USERNAME = await getSecret("ADMIN_USERNAME");
 const ADMIN_PASSWORD = await getSecret("ADMIN_PASSWORD");
 
 try {
 	await createAdminUser({
-		username: SEED_USERNAME,
-		password: SEED_PASSWORD,
-	});
-	await createAdminUser({
 		username: ADMIN_USERNAME,
 		password: ADMIN_PASSWORD,
-	});
-	await signIn({
-		username: SEED_USERNAME,
-		password: SEED_PASSWORD,
 	});
 
 	await Promise.all([putKnittingPattern(), putCraftImage()]);
