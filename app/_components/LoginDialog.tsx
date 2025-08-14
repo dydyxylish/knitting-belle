@@ -47,7 +47,7 @@ export function LoginDialog({
 						<Button
 							type="button"
 							variant="outline"
-							className="flex gap-3 bg-white px-14 font-semibold text-slate-700"
+							className="flex w-80 gap-3 bg-white font-semibold text-slate-700"
 						>
 							<Image src="google.svg" alt="google" width={24} height={24} />
 							<span className="tracking-wider">Googleでログイン</span>
@@ -56,17 +56,14 @@ export function LoginDialog({
 				</DialogClose>
 				<DialogClose asChild>
 					<LoginWrapper provider="Email">
-						{/* <a href={`/api/auth/sign-in?lang-ja`}> */}
 						<Button
 							type="button"
 							variant="outline"
-							className="flex gap-3 bg-white px-14 font-semibold text-slate-700"
+							className="flex w-80 gap-3 bg-white font-semibold text-slate-700"
 						>
-							{/* <Image src="google.svg" alt="google" width={24} height={24} /> */}
-							<Mail size={24} />
+							<Mail className="size-5" />
 							<span className="tracking-wider">Emailでログイン</span>
 						</Button>
-						{/* </a> */}
 					</LoginWrapper>
 				</DialogClose>
 			</DialogContent>

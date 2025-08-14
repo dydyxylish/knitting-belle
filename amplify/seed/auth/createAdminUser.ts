@@ -1,4 +1,5 @@
 import { addToUserGroup, createAndSignUpUser } from "@aws-amplify/seed";
+import { signIn } from "aws-amplify/auth";
 
 import { getLogger } from "@/lib/logger";
 
@@ -31,6 +32,10 @@ export const createAdminUser = async ({
 			err.name === "UsernameExistsException"
 		) {
 			log.warn({ error, username }, "すでにユーザ作成済です");
+			await signIn({
+				username,
+				password,
+			});
 		} else {
 			throw err;
 		}

@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { getSecret } from "@aws-amplify/seed";
 import { Amplify } from "aws-amplify";
-import { deleteUser, signIn } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 
 import type { Schema } from "@/amplify/data/resource";
@@ -32,10 +31,6 @@ try {
 	await Promise.all([putKnittingPattern(), putCraftImage()]);
 	await createKnittingPattern(dbClient);
 	await createCraftImage(dbClient);
-} finally {
-	try {
-		await deleteUser();
-	} catch (e) {
-		log.error(e, "failed to do something");
-	}
+} catch (e) {
+	log.error(e, "failed to do something");
 }

@@ -12,12 +12,7 @@ export const FAQ = () => {
 	return (
 		<div className="mx-10 mt-24 flex flex-col items-center gap-8 rounded-2xl bg-secondary/20 pb-4 font-kiwi">
 			<h3 className="mt-6 text-xl">よくあるご質問</h3>
-			<Accordion
-				type="single"
-				collapsible
-				className="mx-6"
-				defaultValue="item-1"
-			>
+			<Accordion type="single" collapsible className="mx-6">
 				<AccordionItem value="item-1">
 					<AccordionTrigger>Q. 編み図はどのように届きますか？</AccordionTrigger>
 					<AccordionContent className="flex flex-col gap-4 text-balance">
@@ -35,8 +30,8 @@ export const FAQ = () => {
 					<AccordionTrigger>Q. 支払い方法は何がありますか？</AccordionTrigger>
 					<AccordionContent className="flex flex-col gap-4 text-balance">
 						<p>
-							A. クレジットカード（JCB／Visa／Mastercard／AMEXなど）、Apple
-							Pay、Google Payでのお支払いが可能です。
+							A.
+							クレジットカード（JCB／Visa／Mastercard／AMEXなど）でのお支払いが可能です。
 						</p>
 					</AccordionContent>
 				</AccordionItem>

@@ -46,3 +46,15 @@
   alt: "ベージュ（ポコポコ巾着バッグ）"
   imagePath: "yarnCraftImage/puffyCrochetDrawstringBag/beige.jpg"
   sortOrder: 2
+- title: "トップ"
+  alt: "トップ（透かし編みニットドッグシャツ）"
+  imagePath: "yarnCraftImage/openworkKnitDogShirt/top.jpg"
+  sortOrder: 1
+- title: "トップ"
+  alt: "フロント（透かし編みニットドッグシャツ）"
+  imagePath: "yarnCraftImage/openworkKnitDogShirt/front.jpg"
+  sortOrder: 2
+- title: "トップ"
+  alt: "編み図（透かし編みニットドッグシャツ）"
+  imagePath: "yarnCraftImage/openworkKnitDogShirt/pattern.jpg"
+  sortOrder: 3

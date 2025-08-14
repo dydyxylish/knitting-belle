@@ -8,7 +8,7 @@
 	},
 	"packageManager": "pnpm@10.12.1",
 	"scripts": {
-		"dev": "rm .next & dotenvx run -f .env.local -- next dev --turbo",
+		"dev": "rm -rf .next & dotenvx run -f .env.local -- next dev --turbo",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
