@@ -48,3 +48,11 @@ seed-policy.json
 .http
 
 .env
+env
+
+.serena
+
+playwright-report
+test-results
+
+videos

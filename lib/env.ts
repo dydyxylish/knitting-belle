@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const EnvSchema = z.object({
 	AMPLIFY_APP_ORIGIN: z.string(),
+	GOOGLE_CLIENT_ID: z.string(),
+	GOOGLE_CLIENT_SECRET: z.string(),
 	GOOGLE_CALLBACK_URLS: z
 		.string()
 		.nonempty()
@@ -36,6 +38,10 @@ const EnvSchema = z.object({
 		.refine((val) => Number.isInteger(val) && val > 0, {
 			message: "SIGNED_URL_EXPIRE_HOUR は正の整数である必要があります",
 		}),
+	TEST_USERNAME: z.string(),
+	TEST_PASSWORD: z.string(),
+	TEST_ADMIN_USERNAME: z.string(),
+	TEST_ADMIN_PASSWORD: z.string(),
 });
 
 export const env = EnvSchema.parse(process.env);

@@ -20,4 +20,28 @@ frontend:
   cache:
     paths:
       - .next/cache/**/*
-      - .pnpm-store/**/*
+      - ~/.pnpm-store/**/*
+      - node_modules/.cache/**/*
+# test:
+#   phases:
+#     preTest:
+#       commands:
+#         - pnpm ci
+#         - pnpm install -g pm2
+#         - pnpm install -g wait-on
+#         - pnpm install mocha mochawesome mochawesome-merge mochawesome-report-generator
+#         - pm2 start pnpm -- start
+#         - wait-on http://localhost:3000
+#     test:
+#       commands:
+#         - 'pnpx cypress run --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
+#     postTest:
+#       commands:
+#         - pnpm mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
+#         - pm2 kill
+#   artifacts:
+#     baseDirectory: cypress
+#     configFilePath: "**/mochawesome.json"
+#     files:
+#       - "**/*.png"
+#       - "**/*.mp4"

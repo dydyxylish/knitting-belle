@@ -27,7 +27,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"app/(pages)/account/_containers/DownloadButton"
+		"app/(pages)/account/_containers/DownloadButton",
+		"cypress/scripts/**/*.mjs"
 	],
 	"exclude": ["node_modules", "amplify"]
 }

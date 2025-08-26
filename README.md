@@ -25,20 +25,8 @@ v20.19.2
 - [アカウント設定手順](https://docs.amplify.aws/react/start/account-setup/)を参照
 
 
-#### secret設定
-- 以下をsecretに設定
-```
-pnpm ampx sandbox secret KEY
-```
-- KEYS
-```
-ADMIN_USERNAME
-ADMIN_PASSWORD # Cognito標準のパスワードポリシーに準拠
-
-```
-
 #### 環境変数設定
-- .env.localを作成する
+- .env.developmentを作成する
 ```
 AMPLIFY_APP_ORIGIN=http://localhost # createAuthRouteHandlersで使用
 GOOGLE_CALLBACK_URLS=http://localhost:3000/api/auth/sign-in-callback
@@ -54,7 +42,7 @@ STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 
 #### Amplify backendをデプロイ
 ```
-❯ pnpm dotenvx run --env-file=.env.local -- ampx sandbox
+❯ pnpm dotenvx run -- ampx sandbox
 ```
 
 #### seed用のpolicyを生成
@@ -72,7 +60,7 @@ STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 
 #### seedを投入
 ```
-❯ pnpm dotenvx run --env-file=.env.local -- ampx sandbox seed --debug
+❯ pnpm dotenvx run -- ampx sandbox seed --debug
 ```
 
 #### Cognito Managed Loginを設定

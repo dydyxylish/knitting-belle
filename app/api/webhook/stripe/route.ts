@@ -4,7 +4,6 @@ import type Stripe from "stripe";
 
 import { amplifyConfigure } from "@/app/_lib/configureAmplify";
 import { createPurchaseHistory } from "@/app/_lib/create/createPurchaseHistory";
-import { checkKnittingPatternExists } from "@/app/_lib/fetch/knittingPattern/checkKnittingPatternExists";
 import { getKnittingPatternWithAuth } from "@/app/_lib/fetch/knittingPattern/getKnittingPatternWithAuth";
 import { checkSamePurchaseHistory } from "@/app/_lib/fetch/purchaseHistory/checkSamePurchaseHistory";
 import { checkUserExistsBySub } from "@/app/_lib/fetch/user/checkUserExistsBySub";
@@ -18,81 +17,147 @@ amplifyConfigure();
 
 const log = getLogger(import.meta.url);
 
-export async function POST(req: Request) {
-	// リクエストの検証
+// 定数
+const WEBHOOK_EVENTS = {
+	CHECKOUT_SESSION_COMPLETED: "checkout.session.completed",
+} as const;
+
+const HTTP_STATUS = {
+	OK: 200,
+	BAD_REQUEST: 400,
+} as const;
+
+const ERROR_MESSAGES = {
+	NO_SIGNATURE: "No signature",
+	MISSING_METADATA: "Metadataが存在しません",
+	KNITTING_PATTERN_NOT_FOUND: "編み図が取得できません",
+	EVENT_HANDLING_FAILED: "イベントのハンドルに失敗しました",
+	BAD_REQUEST: "不適切なリクエストです",
+} as const;
+
+// 型定義
+type CheckoutSessionMetadata = {
+	sub: string;
+	knittingPatternSlug: string;
+};
+
+type PurchaseHistoryData = {
+	sessionId: string;
+	user: string;
+	knittingPatternSlug: string;
+	purchasedAt: string;
+};
+
+// メタデータ検証
+function validateCheckoutSessionMetadata(
+	session: Stripe.Checkout.Session,
+): CheckoutSessionMetadata {
+	if (
+		!session.metadata ||
+		!session.metadata.sub ||
+		!session.metadata.knittingPatternSlug
+	) {
+		log.warn({ sessionId: session.id }, ERROR_MESSAGES.MISSING_METADATA);
+		throw new Error(ERROR_MESSAGES.MISSING_METADATA);
+	}
+
+	return {
+		sub: session.metadata.sub,
+		knittingPatternSlug: session.metadata.knittingPatternSlug,
+	};
+}
+
+// checkout.session.completed イベントハンドラー
+async function handleCheckoutSessionCompleted(
+	session: Stripe.Checkout.Session,
+): Promise<void> {
+	const { sub, knittingPatternSlug } = validateCheckoutSessionMetadata(session);
+
+	const purchaseHistoryFields = {
+		sessionId: session.id,
+		user: sub,
+		knittingPatternSlug,
+	};
+
+	// 管理者でログインし、並行して検証を実行
+	await loginAdmin();
+
+	// 編み図の存在確認と詳細取得を並行実行
+	const [knittingPattern] = await Promise.all([
+		getKnittingPatternWithAuth(knittingPatternSlug),
+		checkUserExistsBySub(sub),
+		checkSamePurchaseHistory(purchaseHistoryFields),
+	]);
+
+	if (!knittingPattern) {
+		throw new Error(ERROR_MESSAGES.KNITTING_PATTERN_NOT_FOUND);
+	}
+
+	// 購入履歴作成とダウンロード数更新を並行実行
+	const purchaseHistoryData: PurchaseHistoryData = {
+		...purchaseHistoryFields,
+		purchasedAt: new Date(session.created * 1000).toISOString(),
+	};
+
+	const [purchaseHistory] = await Promise.all([
+		createPurchaseHistory(purchaseHistoryData),
+		updateDownloadCount({
+			slug: knittingPattern.slug,
+			downloadCount: (knittingPattern.downloadCount || 0) + 1,
+		}),
+	]);
+
+	log.info({ purchaseHistory }, "購入履歴を作成しました");
+}
+
+// Webhook署名検証
+async function verifyWebhookSignature(req: Request): Promise<Stripe.Event> {
 	const body = await req.text();
 	const requestHeader = await headers();
 	const sig = requestHeader.get("Stripe-Signature");
+
+	if (!sig) {
+		throw new Error(ERROR_MESSAGES.NO_SIGNATURE);
+	}
+
+	try {
+		return stripe.webhooks.constructEvent(body, sig, env.STRIPE_WEBHOOK_SECRET);
+	} catch (error) {
+		const err =
+			error instanceof Error ? error : new Error(ERROR_MESSAGES.BAD_REQUEST);
+		log.error({ error }, ERROR_MESSAGES.BAD_REQUEST);
+		throw err;
+	}
+}
+
+export async function POST(req: Request) {
+	// リクエストの検証
 	let event: Stripe.Event;
 	try {
-		if (!sig) throw new Error("No signature");
-		event = stripe.webhooks.constructEvent(
-			body,
-			sig,
-			env.STRIPE_WEBHOOK_SECRET,
-		);
+		event = await verifyWebhookSignature(req);
 	} catch (error) {
-		const err = error instanceof Error ? error : new Error("Bad Request");
-		log.error({ error }, "不適切なリクエストです");
+		const err =
+			error instanceof Error ? error : new Error(ERROR_MESSAGES.BAD_REQUEST);
 		return new NextResponse(`Webhook Error: ${err.message}`, {
-			status: 400,
+			status: HTTP_STATUS.BAD_REQUEST,
 		});
 	}
 
 	// イベントの処理
 	try {
 		switch (event.type) {
-			case "checkout.session.completed": {
-				const session = event.data.object;
-				if (
-					!session.metadata ||
-					!session.metadata.sub ||
-					!session.metadata.knittingPatternSlug
-				) {
-					console.warn("Metadataが存在しません:", session.id);
-					throw new Error("Metadataが存在しません");
-				}
-
-				const sub = session.metadata.sub;
-				const knittingPatternSlug = session.metadata.knittingPatternSlug;
-				const purchaseHistoryFields = {
-					sessionId: session.id,
-					user: sub,
-					knittingPatternSlug: knittingPatternSlug,
-				};
-
-				await loginAdmin();
-				await Promise.all([
-					checkKnittingPatternExists(knittingPatternSlug),
-					checkUserExistsBySub(sub),
-					checkSamePurchaseHistory(purchaseHistoryFields),
-				]);
-
-				const purchaseHistory = await createPurchaseHistory({
-					...purchaseHistoryFields,
-					purchasedAt: new Date(session.created * 1000).toISOString(),
-				});
-				log.info({ purchaseHistory }, "購入履歴を作成しました");
-
-				// TODO: [REFACTOR]上でもknittingPattern取得しているため重複している
-				// ダウンロード数+1
-				const knittingPattern =
-					await getKnittingPatternWithAuth(knittingPatternSlug);
-				if (!knittingPattern) throw new Error("編み図が取得できません");
-				await updateDownloadCount({
-					slug: knittingPattern?.slug,
-					downloadCount: (knittingPattern.downloadCount || 0) + 1,
-				});
-
+			case WEBHOOK_EVENTS.CHECKOUT_SESSION_COMPLETED: {
+				await handleCheckoutSessionCompleted(
+					event.data.object as Stripe.Checkout.Session,
+				);
 				break;
 			}
 		}
-		return new NextResponse("OK", { status: 200 });
+		return new NextResponse("OK", { status: HTTP_STATUS.OK });
 	} catch (error) {
-		console.error(error);
-		log.error({ error }, "イベントのハンドルに失敗しました");
-		return new NextResponse("イベントのハンドルに失敗しました", {
-			status: 400,
+		log.error({ error }, ERROR_MESSAGES.EVENT_HANDLING_FAILED);
+		return new NextResponse(ERROR_MESSAGES.EVENT_HANDLING_FAILED, {
+			status: HTTP_STATUS.BAD_REQUEST,
 		});
 	}
 }

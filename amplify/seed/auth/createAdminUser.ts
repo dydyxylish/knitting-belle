@@ -5,26 +5,32 @@ import { getLogger } from "@/lib/logger";
 
 const log = getLogger(import.meta.url);
 
-interface createAdminUserArgs {
+interface createUserArgs {
 	username: string;
 	password: string;
+	group?: string;
+	signInAfterCreation?: boolean;
 }
 
-export const createAdminUser = async ({
+export const createUser = async ({
 	username,
 	password,
-}: createAdminUserArgs) => {
+	group,
+	signInAfterCreation = true,
+}: createUserArgs) => {
 	try {
 		const adminUser = await createAndSignUpUser({
 			username: username,
 			password: password,
-			signInAfterCreation: true,
+			signInAfterCreation,
 			signInFlow: "Password",
 			userAttributes: {
 				locale: "ja",
 			},
 		});
-		await addToUserGroup(adminUser, "admin");
+		if (group) {
+			await addToUserGroup(adminUser, group);
+		}
 	} catch (error) {
 		const err = error as Error;
 		if (
@@ -32,10 +38,12 @@ export const createAdminUser = async ({
 			err.name === "UsernameExistsException"
 		) {
 			log.warn({ error, username }, "すでにユーザ作成済です");
-			await signIn({
-				username,
-				password,
-			});
+			if (signInAfterCreation) {
+				await signIn({
+					username,
+					password,
+				});
+			}
 		} else {
 			throw err;
 		}
