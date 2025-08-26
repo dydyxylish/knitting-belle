@@ -1,8 +1,6 @@
 name: Playwright Tests
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
@@ -11,52 +9,84 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
-      DOTENVX_ENV: ci
+      DOTENV_ENV: ci
+      SANDBOX_NAME: ci-${{ github.run_id }}
     permissions:
       contents: read
       id-token: write # oidc用
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+
+      - name: Set env only in act
+        if: ${{ env.ACT }}
+        run: echo "ACTIONS_RUNTIME_TOKEN=${{ secrets.ACTIONS_RUNTIME_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials（GitHub Actions）
+        if: ${{ !env.ACT }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
           role-session-name: githubActionsForPlaywright
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Configure AWS Credentials（Act）
+        if: ${{ env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          version: 10
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: Setup Node.js
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
           cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Set Sandbox Secret
+        run: |
+          printf "%s" "${{ secrets.GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
+          printf "%s" "${{ secrets.GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET
+
       - name: Create Sandbox for Playwright
         run: |
-          export SANDBOX_NAME="ci-${GITHUB_RUN_ID}"
-          pnpm sandbox:create --identifier $SANDBOX_NAME --once
+          pnpm sandbox:create --identifier ${{ env.SANDBOX_NAME }} --once
 
       - name: Seed Data
         run: |
-          pnpm sandbox:seed --identifier $SANDBOX_NAME
+          pnpm sandbox:seed --identifier ${{ env.SANDBOX_NAME }}
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
 
-      - name: Setup environment files
-        run: |
-          echo "${{ secrets.CI_ENV_FILE }}" > .env.ci
-
-      - name: Build application
+      - name: Build Next.js
         run: pnpm build
+
+      - name: Start Next.js
+        run: pnpm pm2:start
+
+      - name: Wait for Next.js to start
+        run: pnpm wait:e2e
 
       - name: Run Playwright tests
         run: pnpm e2e
@@ -69,7 +99,16 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - name: Stop Next.js
+        run: pnpm pm2:stop
+
       - name: Delete Sandbox
-        if: always()
+        if: ${{ !env.ACT }}
         run: |
-          pnpm sandbox:delete --identifier $SANDBOX_NAME -y
+          pnpm sandbox:delete --identifier ${{ env.SANDBOX_NAME }} -y
+
+      - name: Delete Sandbox Secret
+        if: ${{ !env.ACT }}
+        run: |
+          pnpm sandbox:delete_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
+          pnpm sandbox:delete_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET

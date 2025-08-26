@@ -175,7 +175,9 @@ async function createStripeCheckoutSession(
 }
 
 // Helper function for handling payment errors
-function handlePaymentError(validationResult: PaymentValidationResult) {
+function handlePaymentError(
+	validationResult: PaymentValidationResult,
+): PaymentResult | undefined {
 	if (validationResult.success) return;
 
 	const error = validationResult.error;
@@ -188,24 +190,34 @@ function handlePaymentError(validationResult: PaymentValidationResult) {
 
 		case "AUTH_ERROR":
 			if (error.submission) {
-				return error.submission.reply({
+				error.submission.reply({
 					fieldErrors: {
 						sessionError: [
 							"セッションがきれています。再度ログインしてください",
 						],
 					},
 				});
+				return {
+					error: {
+						sessionError: "セッションがきれています。再度ログインしてください",
+					},
+				};
 			}
 			redirect("/cancel");
 			break;
 
 		case "DUPLICATE_ERROR":
 			if (error.submission) {
-				return error.submission.reply({
+				error.submission.reply({
 					fieldErrors: {
 						duplicateError: [`お客様は、こちらの編み図を既に購入済みです`],
 					},
 				});
+				return {
+					error: {
+						duplicateError: "お客様は、こちらの編み図を既に購入済みです",
+					},
+				};
 			}
 			redirect("/cancel");
 			break;
@@ -215,7 +227,16 @@ function handlePaymentError(validationResult: PaymentValidationResult) {
 	}
 }
 
-export async function makePayment(formData: FormData) {
+type PaymentResult = {
+	error: {
+		duplicateError?: string;
+		sessionError?: string;
+	};
+};
+
+export async function makePayment(
+	formData: FormData,
+): Promise<PaymentResult | undefined> {
 	try {
 		// Validate payment request
 		const validationResult = await validatePaymentRequest(formData);

@@ -56,3 +56,6 @@ playwright-report
 test-results
 
 videos
+.secrets
+act.log
+.artifacts

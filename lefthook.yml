@@ -2,5 +2,15 @@ pre-commit:
   commands:
     check:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      run: pnpm biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
       stage_fixed: true
+
+pre-push:
+  commands:
+    e2e:
+      run: |
+        pnpm build
+        pnpm pm2:start
+        pnpm wait:e2e
+        pnpm e2e
+        pnpm pm2:stop

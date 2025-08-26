@@ -31,22 +31,17 @@ export const CheckOutButtonPresentation = ({
 		const result = await makePayment(formData);
 		if (result?.error) {
 			console.log(result.error);
-			const errors = Object.entries(result.error);
-			errors.forEach(([key, msg]) => {
-				switch (key) {
-					case "duplicateError": {
-						toast.warning(msg, {
-							description: DuplicateMsg,
-						});
-						break;
-					}
-					case "sessionError": {
-						setActiveSession(false);
-						toast.error(msg);
-						break;
-					}
-				}
-			});
+
+			if (result.error.duplicateError) {
+				toast.warning(result.error.duplicateError, {
+					description: DuplicateMsg,
+				});
+			}
+
+			if (result.error.sessionError) {
+				setActiveSession(false);
+				toast.error(result.error.sessionError);
+			}
 		}
 	};
 

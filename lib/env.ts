@@ -2,8 +2,6 @@ import { z } from "zod";
 
 const EnvSchema = z.object({
 	AMPLIFY_APP_ORIGIN: z.string(),
-	GOOGLE_CLIENT_ID: z.string(),
-	GOOGLE_CLIENT_SECRET: z.string(),
 	GOOGLE_CALLBACK_URLS: z
 		.string()
 		.nonempty()
@@ -24,6 +22,7 @@ const EnvSchema = z.object({
 		),
 	STRIPE_SUCCESS_URL: z.string(),
 	STRIPE_CANCEL_URL: z.string(),
+	AWS_REGION: z.string(),
 	COOKIE_DOMAIN: z.string(),
 	SEED_BUCKET_ARN: z.string(),
 	SEED_BUCKET_REGION: z.string(),
