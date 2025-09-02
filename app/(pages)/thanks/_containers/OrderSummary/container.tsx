@@ -22,13 +22,6 @@ export const OrderSummaryContainer = async ({
 		);
 		throw new Error("購入履歴に対応する編み図が存在しません");
 	}
-	if (!purchaseHistory.purchasedAt) {
-		log.error(
-			{ purchaseHistory, knittingPattern },
-			"購入日時が登録されていません",
-		);
-		throw new Error("購入日時が登録されていません");
-	}
 	return (
 		<OrderSummaryPresentation
 			knittingPatternTitle={knittingPattern?.title}

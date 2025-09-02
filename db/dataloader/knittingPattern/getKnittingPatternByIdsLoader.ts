@@ -9,10 +9,6 @@ export const getKnittingPatternsBySlugsLoader = cache(
 		new DataLoader(async (slugs: readonly string[]) => {
 			const knittingPatterns = await queryKnittingPatternsBySlugs(slugs);
 			const knittingPatternMap = keyBy(knittingPatterns, (item) => item.slug);
-			return slugs.map(
-				(slug) =>
-					knittingPatternMap[slug] ||
-					new Error(`slug: ${slug}に該当するKnittingPatternが存在しません`),
-			);
+			return slugs.map((slug) => knittingPatternMap[slug] || null);
 		}),
 );

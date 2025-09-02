@@ -21,7 +21,9 @@ export const DetailKnittingPatternPresentation = ({
 		<div className="mt-16">
 			{children}
 			<Card className="mt-4 border-none bg-transparent px-8 font-kiwi shadow-none">
-				<CardTitle className="leading-7">{knittingPattern.title}</CardTitle>
+				<CardTitle>
+					<h1 className="leading-7">{knittingPattern.title}</h1>
+				</CardTitle>
 				<CardHeader className="flex justify-end gap-8 px-8 font-mono">
 					<div className="flex gap-2">
 						<Download size={18} />

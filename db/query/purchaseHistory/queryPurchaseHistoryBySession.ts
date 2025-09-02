@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 
 import { dbClientWithAuth } from "@/db/serverSideClient";
-import { env } from "@/lib/env";
 import { getLogger } from "@/lib/logger";
 
 const log = getLogger(import.meta.url);
@@ -20,11 +19,9 @@ export const queryPurchaseHistoryBySession = async ({
 					sessionId: {
 						eq: sessionId,
 					},
-					purchasedAt: {
-						// 初めて生成されてからenv.SIGNED_URL_EXPIRE_HOUR時間のみ有効(Thanksページ表示期限)
-						ge: dayjs()
-							.subtract(env.SIGNED_URL_EXPIRE_HOUR, "hour")
-							.toISOString(),
+					expireAt: {
+						// ダウンロードするまでの時間を確保するため、expireAt署名付きURLの期限が切れる10分前まで
+						ge: dayjs().add(10, "minutes").toISOString(),
 					},
 				},
 			});

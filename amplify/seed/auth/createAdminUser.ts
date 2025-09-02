@@ -1,5 +1,5 @@
 import { addToUserGroup, createAndSignUpUser } from "@aws-amplify/seed";
-import { signIn } from "aws-amplify/auth";
+import { signIn, signOut } from "aws-amplify/auth";
 
 import { getLogger } from "@/lib/logger";
 
@@ -30,6 +30,12 @@ export const createUser = async ({
 		});
 		if (group) {
 			await addToUserGroup(adminUser, group);
+			// グループ追加後に再度サインインして権限を適用
+			await signOut();
+			await signIn({
+				username,
+				password,
+			});
 		}
 	} catch (error) {
 		const err = error as Error;

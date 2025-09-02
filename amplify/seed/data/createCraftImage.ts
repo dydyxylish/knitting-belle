@@ -1,21 +1,14 @@
-import { readFileSync } from "node:fs";
 import type { Client } from "aws-amplify/data";
-import { parse } from "yaml";
 
 import type { Schema } from "@/amplify/data/resource";
 import { getLogger } from "@/lib/logger";
+import { parseYarnCraftImageYaml } from "./parseFixture";
 
 const log = getLogger(import.meta.url);
 
 export const createCraftImage = async (dbClient: Client<Schema>) => {
 	try {
-		const yamlFile = readFileSync(
-			`${process.cwd()}/amplify/seed/data/asset/yarnCraftImage.yml`,
-			"utf8",
-		);
-		const yarnCraftImages = parse(
-			yamlFile,
-		) as Schema["YarnCraftImage"]["type"][];
+		const yarnCraftImages = await parseYarnCraftImageYaml();
 
 		// KnittingPatternテーブルから編み図一覧取得
 		const { data: knittingPatterns } =

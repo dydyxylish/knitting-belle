@@ -19,7 +19,7 @@ export const poolingPurchaseHistory = async (sessionId: string) =>
 		onFailedAttempt: (error) => {
 			log.warn(
 				{ error },
-				`リトライ中: ${error.attemptNumber}回目、残り${error.retriesLeft}回`,
+				`リトライ中: ${error.attemptNumber}回目、残り${error.retriesLeft - 1}回`,
 			);
 		},
 	});

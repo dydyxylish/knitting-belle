@@ -52,7 +52,7 @@ export const FAQ = () => {
 								</span>
 							</a>
 							のダイレクトメッセージまたは
-							<a href="mailto:dasu09spec@ymail.ne.jp">
+							<a href={`mailto:${env.NEXT_PUBLIC_CONTACT_EMAIL}`}>
 								<span className="text-blue-600 underline">メール</span>
 							</a>
 							にてご連絡ください。状況を確認の上、再送いたします。

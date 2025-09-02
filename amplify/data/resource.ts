@@ -42,8 +42,8 @@ const schema = a.schema({
 			user: a.string().required(), // JWT sub
 			knittingPatternSlug: a.string().required(),
 			knittingPattern: a.belongsTo("KnittingPattern", "knittingPatternSlug"),
-			purchasedAt: a.datetime(),
-			sessionId: a.string(),
+			purchasedAt: a.datetime().required(),
+			sessionId: a.string().required(),
 			expireAt: a.datetime(), //署名付きURLの有効期限
 			signedUrl: a.string(),
 		})

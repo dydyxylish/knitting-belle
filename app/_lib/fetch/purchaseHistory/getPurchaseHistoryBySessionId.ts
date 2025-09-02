@@ -9,6 +9,7 @@ export const getPurchaseHistoryBySessionId = async (
 	const purchaseHistories = await runWithAmplifyServerContext({
 		nextServerContext: null,
 		async operation() {
+			// FIXME: Stripeからのリダイレクトのため、cookieで認証できない（SameSite Cookie）
 			await loginAdmin();
 			return await getPurchasedHistoryBySession(args);
 		},

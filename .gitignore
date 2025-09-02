@@ -54,8 +54,9 @@ env
 
 playwright-report
 test-results
+e2e/playwright/.auth
 
 videos
 .secrets
-act.log
+.act/log
 .artifacts

@@ -3,6 +3,7 @@ name: Playwright Tests
 on:
   pull_request:
     branches: [main, develop]
+    types: [opened, synchronize, reopened]
 
 jobs:
   test:
@@ -10,13 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOTENV_ENV: ci
-      SANDBOX_NAME: ci-${{ github.run_id }}
+      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
     permissions:
       contents: read
       id-token: write # oidc用
     steps:
       - uses: actions/checkout@v4
 
+      # setup env
       - name: Setup environment files
         run: |
           printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
@@ -25,6 +27,7 @@ jobs:
         if: ${{ env.ACT }}
         run: echo "ACTIONS_RUNTIME_TOKEN=${{ secrets.ACTIONS_RUNTIME_TOKEN }}" >> $GITHUB_ENV
 
+      # configure aws credentials
       - name: Configure AWS Credentials（GitHub Actions）
         if: ${{ !env.ACT }}
         uses: aws-actions/configure-aws-credentials@v4
@@ -52,14 +55,6 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -68,13 +63,29 @@ jobs:
           printf "%s" "${{ secrets.GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
           printf "%s" "${{ secrets.GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET
 
-      - name: Create Sandbox for Playwright
-        run: |
-          pnpm sandbox:create --identifier ${{ env.SANDBOX_NAME }} --once
+      # ディレクトリのハッシュをキーにキャッシュを取得
+      - name: Restore amplify_outputs.json cache
+        id: amplify_outputs_cache
+        uses: actions/cache@v4
+        with:
+          path: amplify_outputs.json
+          key: amplify_outputs-${{ github.ref_name }}-${{ hashFiles('amplify/**') }}
 
-      - name: Seed Data
+      # キャッシュがなければSandboxを作成
+      - name: Create Sandbox for Playwright
+        if: steps.amplify_outputs_cache.outputs.cache-hit != 'true'
         run: |
+          echo "No cache hit. Creating Sandbox..."
+          pnpm sandbox:create --identifier ${{ env.SANDBOX_NAME }} --once
           pnpm sandbox:seed --identifier ${{ env.SANDBOX_NAME }}
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
@@ -101,14 +112,3 @@ jobs:
 
       - name: Stop Next.js
         run: pnpm pm2:stop
-
-      - name: Delete Sandbox
-        if: ${{ !env.ACT }}
-        run: |
-          pnpm sandbox:delete --identifier ${{ env.SANDBOX_NAME }} -y
-
-      - name: Delete Sandbox Secret
-        if: ${{ !env.ACT }}
-        run: |
-          pnpm sandbox:delete_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
-          pnpm sandbox:delete_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET

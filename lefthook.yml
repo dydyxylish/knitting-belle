@@ -1,3 +1,7 @@
+colors: true
+verbose: true
+no_collapse: true
+
 pre-commit:
   commands:
     check:

@@ -31,6 +31,7 @@ const EnvSchema = z.object({
 	STRIPE_API_KEY: z.string(),
 	STRIPE_WEBHOOK_SECRET: z.string(),
 	INSTAGRAM_URL: z.string(),
+	NEXT_PUBLIC_CONTACT_EMAIL: z.string(),
 	SIGNED_URL_EXPIRE_HOUR: z
 		.string()
 		.transform((val) => Number(val))

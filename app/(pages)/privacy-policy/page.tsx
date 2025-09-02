@@ -1,4 +1,5 @@
 import { Card, CardContent, CardTitle } from "@/app/_components/ui/card";
+import { env } from "@/lib/env";
 
 export default function Page() {
 	return (
@@ -47,9 +48,9 @@ export default function Page() {
 					<p>
 						個人情報に関するお問い合わせは、下記の連絡先までご連絡ください。
 					</p>
-					<a href="mailto:dasu09spec@ymail.ne.jp">
+					<a href={`mailto:${env.NEXT_PUBLIC_CONTACT_EMAIL}`}>
 						<span className="text-blue-600 underline">
-							dasu09spec@ymail.ne.jp
+							{env.NEXT_PUBLIC_CONTACT_EMAIL}
 						</span>
 					</a>
 				</CardContent>

@@ -237,6 +237,7 @@ type PaymentResult = {
 export async function makePayment(
 	formData: FormData,
 ): Promise<PaymentResult | undefined> {
+	let checkoutUrl: string;
 	try {
 		// Validate payment request
 		const validationResult = await validatePaymentRequest(formData);
@@ -248,15 +249,11 @@ export async function makePayment(
 		const { knittingPattern, user } = validationResult.data;
 
 		// Create Stripe checkout session
-		const checkoutUrl = await createStripeCheckoutSession(
-			knittingPattern,
-			user,
-		);
-
-		// Redirect to Stripe checkout
-		redirect(checkoutUrl);
+		checkoutUrl = await createStripeCheckoutSession(knittingPattern, user);
 	} catch (error) {
 		log.error({ error }, "決済処理中にエラーが発生しました");
 		redirect("/cancel");
 	}
+	// Redirect to Stripe checkout
+	redirect(checkoutUrl);
 }

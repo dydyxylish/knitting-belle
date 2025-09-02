@@ -30,5 +30,5 @@
 		"app/(pages)/account/_containers/DownloadButton",
 		"cypress/scripts/**/*.mjs"
 	],
-	"exclude": ["node_modules", "amplify"]
+	"exclude": ["node_modules", "amplify", "e2e"]
 }
