@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import { dbClientWithAuth } from "@/db/serverSideClient";
 import { getLogger } from "@/lib/logger";
 
@@ -18,10 +16,6 @@ export const queryPurchaseHistoryBySession = async ({
 				filter: {
 					sessionId: {
 						eq: sessionId,
-					},
-					expireAt: {
-						// ダウンロードするまでの時間を確保するため、expireAt署名付きURLの期限が切れる10分前まで
-						ge: dayjs().add(10, "minutes").toISOString(),
 					},
 				},
 			});

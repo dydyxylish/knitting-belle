@@ -54,6 +54,7 @@ export const ParticleBackground = () => {
 				pointerEvents: "none",
 				zIndex: -1,
 			}}
+			className="sm:hidden"
 		/>
 	);
 };

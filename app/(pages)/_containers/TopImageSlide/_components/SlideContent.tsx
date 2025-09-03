@@ -21,7 +21,7 @@ const getRotateDeg = (random: number) => {
 };
 
 export const SlideContent = ({ topImages }: SlideContentProps) => (
-	<CarouselContent className=" bg-slate-200/50 p-8 pt-20 pb-12">
+	<CarouselContent className=" bg-slate-200/50 p-8 pt-20 pb-12 sm:bg-transparent">
 		{topImages.map((img, index) => (
 			<CarouselItem key={uuidV4()} className="">
 				<Image
@@ -31,7 +31,7 @@ export const SlideContent = ({ topImages }: SlideContentProps) => (
 					height={500}
 					{...{ priority: index === 0 ? true : undefined }}
 					className={cn(
-						"mx-auto origin-center rounded-sm border-[14px] border-white border-b-[50px] shadow-xl",
+						"mx-auto origin-center rounded-sm border-[14px] border-white border-b-[50px] shadow-lg",
 						getRotateDeg(index),
 					)}
 				/>

@@ -18,7 +18,7 @@ export const DetailKnittingPatternPresentation = ({
 	knittingPattern,
 }: DetailKnittingPatternPresentationProps) => {
 	return (
-		<div className="mt-16">
+		<div className="mt-16 sm:mx-auto sm:max-w-[700px]">
 			{children}
 			<Card className="mt-4 border-none bg-transparent px-8 font-kiwi shadow-none">
 				<CardTitle>

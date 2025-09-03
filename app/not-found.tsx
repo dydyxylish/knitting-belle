@@ -14,7 +14,7 @@ export default function NotFound() {
 				<h2 className="mb-4 font-bold text-2xl text-gray-700">
 					ページが見つかりません
 				</h2>
-				<div className="mb-6 rounded-lg bg-slate-50 p-4 shadow-sm">
+				<div className="mx-6 mb-6 rounded-lg bg-slate-50 p-4 shadow-sm">
 					<p className="text-slate-600 text-sm">
 						お探しのページは存在しないか、移動された可能性があります。
 					</p>

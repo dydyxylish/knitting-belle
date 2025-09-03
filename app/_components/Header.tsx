@@ -7,7 +7,7 @@ import { Button } from "@/app/_components/ui/button";
 import { Avatar } from "./Avatar";
 
 export const Header = () => (
-	<header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between bg-transparent px-4">
+	<header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between bg-transparent px-4 sm:static sm:mx-auto sm:w-full sm:max-w-screen-xl">
 		<Link href="/">
 			<Button variant="ghost" size="icon" className="rounded-full">
 				<Image src="home.svg" alt="home" width={24} height={24} />

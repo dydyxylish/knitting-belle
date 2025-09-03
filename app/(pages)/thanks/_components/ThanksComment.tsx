@@ -33,7 +33,7 @@ export const ThanksComment = () => {
 	const { View: Confetti } = useLottie(confettiOptions, confettiStyles);
 	const { View: GiftBox } = useLottie(giftBoxOptions, giftBoxStyles);
 	return (
-		<div className="relative">
+		<div className="relative sm:w-full sm:max-w-xl">
 			<p className="-translate-x-1/2 -translate-y-1/4 absolute top-1/4 left-1/2 transform whitespace-nowrap font-league text-6xl">
 				Thank you
 			</p>

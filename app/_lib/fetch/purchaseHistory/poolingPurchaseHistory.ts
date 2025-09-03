@@ -8,18 +8,23 @@ const log = getLogger(import.meta.url);
 async function getPurchaseHistory(sessionId: string) {
 	// DBから購入履歴を取得（なければエラーを投げる）
 	const result = await getPurchaseHistoryBySessionId({ sessionId });
+	await sleep(10000);
 	if (!result) throw new Error("該当Sessionの購入履歴がみつかりません");
 	return result;
 }
 
 export const poolingPurchaseHistory = async (sessionId: string) =>
 	await pRetry(() => getPurchaseHistory(sessionId), {
-		retries: 10,
+		retries: 5,
 		minTimeout: 1000, // 1秒ごと
 		onFailedAttempt: (error) => {
 			log.warn(
 				{ error },
-				`リトライ中: ${error.attemptNumber}回目、残り${error.retriesLeft - 1}回`,
+				`リトライ中: ${error.attemptNumber}回目、残り${error.retriesLeft}回`,
 			);
 		},
 	});
+
+function sleep(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}

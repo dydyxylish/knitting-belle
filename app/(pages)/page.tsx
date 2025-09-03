@@ -11,7 +11,7 @@ export default function App() {
 		<>
 			<ParticleBackground />
 			<TopImageSlide />
-			<div className="h-14 bg-gradient-to-b from-slate-200/50 to-{background}" />
+			<div className="container h-14 bg-gradient-to-b from-slate-200/50 to-{background} sm:bg-none" />
 			<main className="mt-12 flex flex-col gap-32">
 				<Image
 					src="knitting_belle.svg"

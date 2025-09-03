@@ -22,7 +22,7 @@ export const generateSignedUrl = async ({
 			const knittingPatternPdf = await getUrl({
 				path: `knittingPattern/${knittingPatternSlug}.pdf`,
 				options: {
-					expiresIn: 60 * 60 * env.SIGNED_URL_EXPIRE_HOUR,
+					expiresIn: 60 * env.SIGNED_URL_EXPIRE_MINUTES,
 					bucket: "knittingPatternBucket",
 				},
 			});

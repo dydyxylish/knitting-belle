@@ -32,11 +32,18 @@ const EnvSchema = z.object({
 	STRIPE_WEBHOOK_SECRET: z.string(),
 	INSTAGRAM_URL: z.string(),
 	NEXT_PUBLIC_CONTACT_EMAIL: z.string(),
-	SIGNED_URL_EXPIRE_HOUR: z
+	SIGNED_URL_EXPIRE_MINUTES: z
 		.string()
 		.transform((val) => Number(val))
-		.refine((val) => Number.isInteger(val) && val > 0, {
-			message: "SIGNED_URL_EXPIRE_HOUR は正の整数である必要があります",
+		.refine((val) => Number.isInteger(val) && val > 0 && val <= 60, {
+			message: "SIGNED_URL_EXPIRE_MINUTES は1以上60以下である必要があります",
+		}),
+	SIGNED_URL_EXPIRE_WARNING_MINUTES: z
+		.string()
+		.transform((val) => Number(val))
+		.refine((val) => Number.isInteger(val) && val > 0 && val <= 60, {
+			message:
+				"SIGNED_URL_EXPIRE_WARNING_MINUTES は1以上60以下である必要があります",
 		}),
 	TEST_USERNAME: z.string(),
 	TEST_PASSWORD: z.string(),

@@ -7,7 +7,7 @@ export const KnittingPatternListPresentation = async ({
 }: KnittingPatternPresentationalProps) => {
 	return (
 		<>
-			<p className="px-14 font-kiwi text-sm/9">
+			<p className="px-14 font-kiwi text-sm/9 sm:text-center">
 				「編む時間」も「できあがる喜び」も大切に。
 				<br />
 				ダウンロードして、すぐに編み始められる編み図が揃っています。

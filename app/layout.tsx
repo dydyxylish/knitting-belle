@@ -50,7 +50,9 @@ export default function RootLayout({
 		<html lang="ja">
 			<body className={cn(inter.className, "bg-background/50")}>
 				<Header />
-				<div className="container">{children}</div>
+				<div className="container sm:mx-auto sm:flex sm:flex-col sm:items-center">
+					{children}
+				</div>
 				<Footer />
 			</body>
 		</html>
