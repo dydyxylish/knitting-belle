@@ -51,6 +51,7 @@ const schema = a.schema({
 		.authorization((allow) => [
 			allow.ownerDefinedIn("user"),
 			allow.groups(["admin"]).to(["read", "create", "update"]),
+			allow.groups(["testAdmin"]).to(["read", "create", "update", "delete"]),
 			allow.owner().to(["read"]),
 		])
 		.secondaryIndexes((index) => [

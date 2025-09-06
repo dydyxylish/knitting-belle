@@ -96,3 +96,26 @@ new cognito.CfnManagedLoginBranding(
 		settings: managedLoginSettings,
 	},
 );
+
+// テスト用adminユーザーにCreateUser権限付与
+const testAdminRole = backend.auth.resources.groups.testAdmin.role;
+
+const cognitoUserPoolCreateUserPolicy = new Policy(
+	backend.auth.stack,
+	"cognitoUserPoolCreateUserPolicy",
+	{
+		policyName: "cognitoUserPoolCreateUserPolicy",
+		statements: [
+			new PolicyStatement({
+				actions: [
+					"cognito-idp:AdminCreateUser",
+					"cognito-idp:AdminSetUserPassword",
+					"cognito-idp:AdminDeleteUser",
+					"cognito-idp:ListUsers",
+				],
+				resources: [backend.auth.resources.userPool.userPoolArn],
+			}),
+		],
+	},
+);
+testAdminRole.attachInlinePolicy(cognitoUserPoolCreateUserPolicy);

@@ -22,9 +22,6 @@ const log = getLogger(import.meta.url);
 const ADMIN_USERNAME = env.ADMIN_USERNAME;
 const ADMIN_PASSWORD = env.ADMIN_PASSWORD;
 
-const TEST_USERNAME = env.TEST_USERNAME;
-const TEST_PASSWORD = env.TEST_PASSWORD;
-
 const TEST_ADMIN_USERNAME = env.TEST_ADMIN_USERNAME;
 const TEST_ADMIN_PASSWORD = env.TEST_ADMIN_PASSWORD;
 
@@ -32,13 +29,7 @@ try {
 	await createUser({
 		username: TEST_ADMIN_USERNAME,
 		password: TEST_ADMIN_PASSWORD,
-		group: "admin",
-		signInAfterCreation: false,
-	});
-
-	await createUser({
-		username: TEST_USERNAME,
-		password: TEST_PASSWORD,
+		group: "testAdmin",
 		signInAfterCreation: false,
 	});
 

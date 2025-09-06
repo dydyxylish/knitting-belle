@@ -45,10 +45,9 @@ const EnvSchema = z.object({
 			message:
 				"SIGNED_URL_EXPIRE_WARNING_MINUTES は1以上60以下である必要があります",
 		}),
-	TEST_USERNAME: z.string(),
-	TEST_PASSWORD: z.string(),
 	TEST_ADMIN_USERNAME: z.string(),
 	TEST_ADMIN_PASSWORD: z.string(),
+	ENABLE_TEST_API: z.coerce.boolean().default(false),
 });
 
 export const env = EnvSchema.parse(process.env);

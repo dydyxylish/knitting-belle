@@ -8,7 +8,6 @@ const log = getLogger(import.meta.url);
 async function getPurchaseHistory(sessionId: string) {
 	// DBから購入履歴を取得（なければエラーを投げる）
 	const result = await getPurchaseHistoryBySessionId({ sessionId });
-	await sleep(10000);
 	if (!result) throw new Error("該当Sessionの購入履歴がみつかりません");
 	return result;
 }
@@ -24,7 +23,3 @@ export const poolingPurchaseHistory = async (sessionId: string) =>
 			);
 		},
 	});
-
-function sleep(ms: number) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}

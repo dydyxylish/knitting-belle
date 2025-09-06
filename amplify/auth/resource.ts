@@ -19,5 +19,5 @@ export const auth = defineAuth({
 			logoutUrls: env.GOOGLE_LOGOUT_URLS,
 		},
 	},
-	groups: ["admin"],
+	groups: ["admin", "testAdmin"],
 });

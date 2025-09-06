@@ -1,7 +1,10 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"allowImportingTsExtensions": true
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true
+		// "noEmit": true
 	},
 	"include": ["./playwright/**/*"],
 	"exclude": ["../node_modules", "../amplify"]

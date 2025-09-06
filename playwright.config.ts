@@ -1,10 +1,19 @@
+import { config } from "@dotenvx/dotenvx";
 import { defineConfig, devices } from "@playwright/test";
+
+if (process.env.CI) {
+	config({ path: ".env.ci" });
+} else {
+	config({ path: ".env" });
+}
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-	testDir: "./e2e/playwright",
+	// tsconfig: ".e2e/tsconfig.json",
+	// timeout: 10 * 1000, // 10秒
+	testDir: "./e2e/playwright/test",
 	/* Run tests in files in parallel */
 	fullyParallel: true,
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -29,28 +38,42 @@ export default defineConfig({
 	/* Configure projects for major browsers */
 	projects: [
 		{
-			name: "chromium",
-			use: { ...devices["Desktop Chrome"] },
+			name: "global setup",
+			testMatch: /global\.setup\.ts/,
+			teardown: "clean up",
 		},
-
 		{
-			name: "firefox",
-			use: { ...devices["Desktop Firefox"] },
+			name: "clean up",
+			testMatch: /global\.teardown\.ts/,
 		},
+		// {
+		// 	name: "chromium",
+		// 	use: { ...devices["Desktop Chrome"] },
+		// 	dependencies: ["global setup"],
+		// },
 
-		{
-			name: "webkit",
-			use: { ...devices["Desktop Safari"] },
-		},
+		// {
+		// 	name: "firefox",
+		// 	use: { ...devices["Desktop Firefox"] },
+		// 	dependencies: ["global setup"],
+		// },
+
+		// {
+		// 	name: "webkit",
+		// 	use: { ...devices["Desktop Safari"] },
+		// 	dependencies: ["global setup"],
+		// },
 
 		/* Test against mobile viewports. */
 		{
 			name: "Mobile Chrome",
 			use: { ...devices["Pixel 6"] },
+			dependencies: ["global setup"],
 		},
-		{
-			name: "Mobile Safari",
-			use: { ...devices["iPhone 14"] },
-		},
+		// {
+		// 	name: "Mobile Safari",
+		// 	use: { ...devices["iPhone 14"] },
+		// 	dependencies: ["global setup"],
+		// },
 	],
 });

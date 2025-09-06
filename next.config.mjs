@@ -25,4 +25,17 @@ export default {
 			];
 		})(),
 	},
+	redirects: () => {
+		if (process.env.ENABLE_TEST_API === "false") {
+			return [
+				{
+					source: "/api/test/:path*",
+					destination: "/",
+					permanent: true,
+				},
+			];
+		} else {
+			return [];
+		}
+	},
 };
