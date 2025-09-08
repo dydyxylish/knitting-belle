@@ -38,8 +38,13 @@ export default defineConfig({
 	/* Configure projects for major browsers */
 	projects: [
 		{
+			name: "global admin setup",
+			testMatch: /global\.admin\.setup\.ts/,
+		},
+		{
 			name: "global setup",
 			testMatch: /global\.setup\.ts/,
+			dependencies: ["global admin setup"],
 			teardown: "clean up",
 		},
 		{

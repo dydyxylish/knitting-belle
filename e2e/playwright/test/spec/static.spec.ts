@@ -65,4 +65,11 @@ test.describe("Static Tests", () => {
 			"ページが見つかりません",
 		);
 	});
+
+	test("Cancel Page", async ({ page }) => {
+		await page.goto("/cancel");
+		await expect(
+			page.locator("h1").filter({ hasText: /^ご注文がキャンセルされました$/ }),
+		).toBeVisible();
+	});
 });

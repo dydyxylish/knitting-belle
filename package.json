@@ -96,6 +96,7 @@
 		"constructs": "^10.4.2",
 		"dynamodb-local": "^0.0.35",
 		"esbuild": "^0.25.5",
+		"fast-glob": "^3.3.3",
 		"jest": "^30.0.5",
 		"jest-environment-jsdom": "^29.7.0",
 		"jest-junit": "^16.0.0",

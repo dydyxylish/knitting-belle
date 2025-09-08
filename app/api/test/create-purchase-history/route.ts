@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import { amplifyConfigure } from "@/e2e/playwright/utils/amplify/amplifyConfigure";
 import { runWithServer } from "@/e2e/playwright/utils/amplify/runWithServer";
 import {
-	deletePurchaseHistory,
-	deletePurchaseHistorySchema,
-} from "@/e2e/playwright/utils/db/deletePurchaseHistory";
+	createPurchaseHistory,
+	createPurchaseHistorySchema,
+} from "@/e2e/playwright/utils/db/createPurchaseHistory";
 import { env } from "@/lib/env";
 import { getLogger } from "@/lib/logger";
 
@@ -15,7 +15,7 @@ const log = getLogger(import.meta.url);
 
 export async function POST(req: Request) {
 	try {
-		log.info("Delete purchase history API called");
+		log.info("Create purchase history API called");
 
 		if (!env.ENABLE_TEST_API) {
 			log.warn("Test API is disabled, rejecting request");
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 		log.info({ body }, "Request body received");
 
 		// zodでバリデーション
-		const validation = deletePurchaseHistorySchema.safeParse(body);
+		const validation = createPurchaseHistorySchema.safeParse(body);
 		if (!validation.success) {
 			log.warn(
 				{ validationErrors: validation.error.errors },
@@ -40,26 +40,20 @@ export async function POST(req: Request) {
 				{ status: 400 },
 			);
 		}
+		log.info({ purchaseHistory: validation.data }, "Validated request data");
 
-		const { knittingPatternSlug, user } = validation.data;
-		log.info({ knittingPatternSlug, user }, "Validated request data");
-
-		await runWithServer(async () =>
-			deletePurchaseHistory({
-				user,
-				knittingPatternSlug,
+		const purchaseHistory = await runWithServer(async () =>
+			createPurchaseHistory({
+				...validation.data,
 			}),
 		);
 
-		log.info(
-			{ user, knittingPatternSlug },
-			"Purchase history deleted successfully",
-		);
+		log.info({ purchaseHistory }, "Purchase history created successfully");
 		return NextResponse.json({ success: true });
 	} catch (error) {
-		log.error({ error }, "Error deleting purchase history");
+		log.error({ error }, "Error creating purchase history");
 		return NextResponse.json(
-			{ error: "Failed to delete purchase history" },
+			{ error: "Failed to create purchase history" },
 			{ status: 500 },
 		);
 	}

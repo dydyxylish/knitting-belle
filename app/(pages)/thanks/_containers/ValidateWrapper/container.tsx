@@ -4,6 +4,7 @@ import { checkExpireAtIsNear } from "@/app/_lib/fetch/purchaseHistory/checkExpir
 import { validateStripeSession } from "@/app/_lib/fetch/purchaseHistory/validateStripeSession";
 import { getLogger } from "@/lib/logger";
 import { DownloadLink } from "../DownloadLink";
+import { ErrorDisplay } from "../ErrorDisplay";
 import { OrderSummary } from "../OrderSummary";
 import { ValidateWrapperPresentation } from "./presentation";
 
@@ -17,21 +18,22 @@ export const ValidateWrapperContainer = async ({
 	sessionId,
 }: ValidateWrapperContainerProps) => {
 	if (!sessionId) redirect("/");
+
 	// セッションIDからStripeで検証 & DBで購入履歴チェック
 	const purchaseHistory = await validateStripeSession(sessionId);
 	if (!purchaseHistory) {
 		log.error({ purchaseHistory }, "購入履歴データが作成されていません");
-		throw new Error("購入履歴データが作成されていません");
+		return <ErrorDisplay error="PURCHASE_HISTORY_NOT_FOUND" />;
 	}
+
 	if (checkExpireAtIsNear(purchaseHistory)) {
 		log.error(
 			{ purchaseHistory },
 			"有効期限を過ぎた購入履歴の取得を検出しました",
 		);
-		throw new Error(
-			"有効期限を過ぎています。マイページから再度ダウンロードしてください。",
-		);
+		return <ErrorDisplay error="PURCHASE_EXPIRED" />;
 	}
+
 	return (
 		<ValidateWrapperPresentation>
 			<DownloadLink purchaseHistory={purchaseHistory} />

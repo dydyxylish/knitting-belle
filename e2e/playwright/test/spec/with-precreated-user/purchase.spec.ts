@@ -1,14 +1,16 @@
 import { faker } from "@faker-js/faker";
-import { expect, test } from "@playwright/test";
+import { expect, request, test } from "@playwright/test";
 import { sample } from "es-toolkit";
 
 import type { Schema } from "@/amplify/data/resource";
 import { parseKnittingPatternYaml } from "@/amplify/seed/data/parseFixture";
 import { extractSubFromAuthJson } from "@/e2e/playwright/utils/auth/extractSubFromAuthJson";
 import { findAuthPath } from "@/e2e/playwright/utils/auth/findAuthPath";
+import { generateAdminAuth } from "@/e2e/playwright/utils/auth/generateTestUserAuth";
 import { DELETE_PURCHASE_HISTORY_ENDPOINT } from "@/e2e/playwright/utils/const";
 import { webhookCheckoutCompleted } from "@/e2e/playwright/utils/stripe/webhookCheckoutCompleted";
 
+// 正常系
 test.describe
 	.serial("Purchase flow", () => {
 		let sampleKnittingPattern: Schema["KnittingPattern"]["type"];
@@ -24,12 +26,14 @@ test.describe
 
 		test.afterAll(async () => {
 			// テスト作成した購入履歴を削除
-			await fetch(DELETE_PURCHASE_HISTORY_ENDPOINT, {
-				method: "POST",
-				body: JSON.stringify({
+			const adminRequest = await request.newContext({
+				storageState: generateAdminAuth(),
+			});
+			await adminRequest.post(DELETE_PURCHASE_HISTORY_ENDPOINT, {
+				data: {
 					knittingPatternSlug: sampleKnittingPattern.slug,
-					userId: userId,
-				}),
+					user: userId,
+				},
 			});
 		});
 
@@ -41,10 +45,11 @@ test.describe
 				.getByRole("button")
 				.filter({ hasText: "決済ページへ進む" })
 				.click();
-			await expect(page).toHaveURL(/https:\/\/checkout\.stripe\.com\/.*/);
+			await page.waitForURL(/https:\/\/checkout\.stripe\.com\/.*/);
 		});
+
 		test("Download PDF", async ({ page }) => {
-			const sessionId = `cs_test_${faker.string.alphanumeric({ length: 24 })}`;
+			const sessionId = `cs_test_purchase_${faker.string.alphanumeric({ length: 24 })}`;
 			const webhook = async () => {
 				await webhookCheckoutCompleted({
 					knittingPatternSlug: sampleKnittingPattern.slug,
