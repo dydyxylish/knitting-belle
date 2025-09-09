@@ -1,5 +1,7 @@
 import "server-only";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
+import type { AmplifyServer } from "aws-amplify/adapter-core";
+import { cookies } from "next/headers";
 
 import outputs from "@/amplify_outputs.json";
 import { env } from "@/lib/env";
@@ -15,3 +17,13 @@ export const { runWithAmplifyServerContext, createAuthRouteHandlers } =
 			},
 		},
 	});
+
+export const runWithServerContext = async <T>(
+	operation: (contextSpec: AmplifyServer.ContextSpec) => Promise<T>,
+	options: { withCookies: boolean } = { withCookies: false },
+): Promise<T> => {
+	return await runWithAmplifyServerContext({
+		nextServerContext: options.withCookies ? { cookies } : null,
+		operation,
+	});
+};

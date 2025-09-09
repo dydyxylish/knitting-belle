@@ -1,15 +1,19 @@
+import "server-only";
 import pRetry from "p-retry";
 
+import { getPurchasedHistoryBySession } from "@/db/repository/purchaseHistory/getPurchaseHIstoryBySession";
 import { getLogger } from "@/lib/logger";
-import { getPurchaseHistoryBySessionId } from "./getPurchaseHistoryBySessionId";
+import { loginAdmin } from "../../loginAdmin";
 
 const log = getLogger(import.meta.url);
 
 async function getPurchaseHistory(sessionId: string) {
 	// DBから購入履歴を取得（なければエラーを投げる）
-	const result = await getPurchaseHistoryBySessionId({ sessionId });
-	if (!result) throw new Error("該当Sessionの購入履歴がみつかりません");
-	return result;
+	await loginAdmin();
+	const result = await getPurchasedHistoryBySession({ sessionId });
+	if (result.length !== 1)
+		throw new Error("該当Sessionの購入履歴がみつかりません");
+	return result[0];
 }
 
 export const poolingPurchaseHistory = async (sessionId: string) =>

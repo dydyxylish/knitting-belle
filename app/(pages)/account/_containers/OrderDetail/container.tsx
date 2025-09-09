@@ -1,7 +1,8 @@
 import { isNull } from "es-toolkit";
 
 import type { Schema } from "@/amplify/data/resource";
-import { getKnittingPattern } from "@/app/_lib/fetch/knittingPattern/getKnittingPattern";
+import { runWithServerContext } from "@/app/_lib/createAmplifyServerRunner";
+import { getKnittingPatternCookie } from "@/db/repository/knittingPattern/getKnittingPatternCookie";
 import { DownloadButton } from "../DownloadButton";
 import { OrderDetailImage } from "../OrderDetailImage";
 import { OrderDetailPresentation } from "./presentation";
@@ -13,8 +14,10 @@ export interface OrderDetailContainerProps {
 export const OrderDetailContainer = async ({
 	purchaseHistory,
 }: OrderDetailContainerProps) => {
-	const knittingPattern = await getKnittingPattern(
-		purchaseHistory.knittingPatternSlug,
+	const knittingPattern = await runWithServerContext(
+		async () =>
+			await getKnittingPatternCookie(purchaseHistory.knittingPatternSlug),
+		{ withCookies: true },
 	);
 	if (isNull(knittingPattern)) throw new Error("編み図が取得できませんでした");
 	return (

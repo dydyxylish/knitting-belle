@@ -5,13 +5,14 @@ import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 
 import type { Schema } from "@/amplify/data/resource";
+import { getKnittingPatternCookie } from "@/db/repository/knittingPattern/getKnittingPatternCookie";
 import { env } from "@/lib/env";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { getLogger } from "@/lib/logger";
 import { paymentSchema } from "@/lib/schema";
 import stripe from "@/lib/stripe";
 import { getCurrentUserInfo } from "../../../lib/getUserInfo";
-import { getKnittingPattern } from "../fetch/knittingPattern/getKnittingPattern";
+import { runWithServerContext } from "../createAmplifyServerRunner";
 import { hasAlreadyKnittingPattern } from "../fetch/purchaseHistory/hasAlreadyKnittingPattern";
 import { getImagePathsBySlugWithCookie } from "../fetch/yarnCraftImage/getImagePathsBySlugWithCookie";
 
@@ -87,9 +88,10 @@ async function validatePaymentRequest(
 		};
 	}
 
-	// Product validation
-	const knittingPattern = await getKnittingPattern(
-		submission.value.knittingPatternSlug,
+	const knittingPattern = await runWithServerContext(
+		async () =>
+			await getKnittingPatternCookie(submission.value.knittingPatternSlug),
+		{ withCookies: true },
 	);
 	if (!knittingPattern) {
 		log.error({ notFoundKnittingPatter: true }, "指定商品が無効です");

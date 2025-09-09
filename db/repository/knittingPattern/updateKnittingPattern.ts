@@ -3,5 +3,5 @@ import {
 	type mutateKnittingPatternArgs,
 } from "@/db/query/knittingPattern/mutateKnittingPattern";
 
-export const updateKnittingPattern = (args: mutateKnittingPatternArgs) =>
-	mutateKnittingPattern(args);
+export const updateKnittingPattern = async (args: mutateKnittingPatternArgs) =>
+	await mutateKnittingPattern(args);

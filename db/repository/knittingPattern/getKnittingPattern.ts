@@ -1,6 +1,6 @@
 import { createLoaders } from "@/db/dataloader/createLoaders";
 
-export const getKnittingPattern = (slug: string) => {
+export const getKnittingPattern = async (slug: string) => {
 	const loader = createLoaders();
-	return loader.knittingPatterns.load(slug);
+	return await loader.knittingPatterns.load(slug);
 };

@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
 import { amplifyConfigure } from "@/app/_lib/configureAmplify";
-import { createPurchaseHistory } from "@/app/_lib/create/createPurchaseHistory";
-import { getKnittingPatternWithAuth } from "@/app/_lib/fetch/knittingPattern/getKnittingPatternWithAuth";
 import { checkSamePurchaseHistory } from "@/app/_lib/fetch/purchaseHistory/checkSamePurchaseHistory";
 import { checkUserExistsBySub } from "@/app/_lib/fetch/user/checkUserExistsBySub";
 import { loginAdmin } from "@/app/_lib/loginAdmin";
-import { updateDownloadCount } from "@/app/_lib/update/updateDownloadCount";
+import { getKnittingPatternWithAuthClient } from "@/db/repository/knittingPattern/getKnittingPatternWithAuth";
+import { updateKnittingPattern } from "@/db/repository/knittingPattern/updateKnittingPattern";
+import { createPurchaseHistory } from "@/db/repository/purchaseHistory/createPurchaseHistory";
 import { env } from "@/lib/env";
 import { getLogger } from "@/lib/logger";
 import stripe from "@/lib/stripe";
@@ -84,7 +84,7 @@ async function handleCheckoutSessionCompleted(
 
 	// 編み図の存在確認と詳細取得を並行実行
 	const [knittingPattern] = await Promise.all([
-		getKnittingPatternWithAuth(knittingPatternSlug),
+		getKnittingPatternWithAuthClient(knittingPatternSlug),
 		checkUserExistsBySub(sub),
 		checkSamePurchaseHistory(purchaseHistoryFields),
 	]);
@@ -101,7 +101,7 @@ async function handleCheckoutSessionCompleted(
 
 	const [purchaseHistory] = await Promise.all([
 		createPurchaseHistory(purchaseHistoryData),
-		updateDownloadCount({
+		updateKnittingPattern({
 			slug: knittingPattern.slug,
 			downloadCount: (knittingPattern.downloadCount || 0) + 1,
 		}),

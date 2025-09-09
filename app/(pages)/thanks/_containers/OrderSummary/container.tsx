@@ -1,5 +1,5 @@
 import type { Schema } from "@/amplify/data/resource";
-import { getKnittingPatternWithAuth } from "@/app/_lib/fetch/knittingPattern/getKnittingPatternWithAuth";
+import { getKnittingPatternWithAuthClient } from "@/db/repository/knittingPattern/getKnittingPatternWithAuth";
 import { getLogger } from "@/lib/logger";
 import OrderSummaryPresentation from "./presentation";
 
@@ -12,7 +12,7 @@ const log = getLogger(import.meta.url);
 export const OrderSummaryContainer = async ({
 	purchaseHistory,
 }: OrderSummaryContainerProps) => {
-	const knittingPattern = await getKnittingPatternWithAuth(
+	const knittingPattern = await getKnittingPatternWithAuthClient(
 		purchaseHistory.knittingPatternSlug,
 	);
 	if (!knittingPattern) {

@@ -97,7 +97,7 @@ test.describe("Account", () => {
 
 	test("Check account", async ({ page }) => {
 		await page.goto("/account");
-		await expect(page.getByText("ご購入履歴")).toBeVisible();
+		await expect(page.getByRole("heading", { name: "My Page" })).toBeVisible();
 		await expect(page.getByText(sampleKnittingPattern.title)).toHaveCount(1);
 		await expect(
 			page.getByText(anotherKnittingPattern.title),
