@@ -1,8 +1,8 @@
 import type { Schema } from "@/amplify/data/resource";
 import "server-only";
-import dayjs from "dayjs";
 
 import { generateSignedUrl } from "@/app/_lib/fetch/purchaseHistory/generateSignedUrl";
+import { checkExpireAtIsNear } from "./checkExpireAtIsNear";
 
 interface getSignedUrlArgs {
 	purchaseHistory: Schema["PurchaseHistory"]["type"];
@@ -10,11 +10,7 @@ interface getSignedUrlArgs {
 
 export const getSignedUrl = async ({ purchaseHistory }: getSignedUrlArgs) => {
 	let url: string;
-	if (
-		purchaseHistory.expireAt &&
-		purchaseHistory.signedUrl &&
-		dayjs(purchaseHistory.expireAt).isAfter(dayjs())
-	) {
+	if (purchaseHistory.signedUrl && checkExpireAtIsNear(purchaseHistory)) {
 		url = purchaseHistory.signedUrl;
 	} else {
 		url = await generateSignedUrl({

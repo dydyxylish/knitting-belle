@@ -28,8 +28,8 @@
 		"sandbox:seed": "pnpm ampx sandbox seed --debug",
 		"sandbox:set_secret": "pnpm ampx sandbox secret set",
 		"sandbox:delete_secret": "pnpm ampx sandbox secret remove",
-		"act:pr": "act pull_request -e .act/event/pr-synchronize.json -W .github/workflows/playwright.yml > .act/log/act.pr-synchronize.log 2>&1",
-		"act:pr:closed": "act pull_request -e .act/event/pr-closed.json -W .github/workflows/deleteSandbox.yml > .act/log/act.pr-closed.log 2>&1",
+		"act:pr": "act pull_request -e .act/event/pr-synchronize.json > .act/log/act.pr-synchronize.log 2>&1",
+		"act:pr:closed": "act pull_request -e .act/event/pr-closed.json > .act/log/act.pr-closed.log 2>&1",
 		"pm2:start": "pnpm pm2 start 'pnpm start' -n e2e-server",
 		"wait:e2e": "pnpm wait-on http://localhost:3000 -t 30000",
 		"pm2:stop": "pnpm pm2 delete e2e-server || true"

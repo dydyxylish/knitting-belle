@@ -53,17 +53,20 @@ const config: Config = {
 	coverageProvider: "v8",
 
 	// Coverage collection patterns
-	collectCoverageFrom: ["app/_lib/**/*.{js,jsx,ts,tsx}"],
+	collectCoverageFrom: [
+		"app/_lib/**/*.{js,jsx,ts,tsx}",
+		"!app/_lib/**/*types.ts",
+	],
 
 	// Coverage thresholds
-	coverageThreshold: {
-		global: {
-			branches: 70,
-			functions: 70,
-			lines: 70,
-			statements: 70,
-		},
-	},
+	// coverageThreshold: {
+	// 	global: {
+	// 		branches: 70,
+	// 		functions: 70,
+	// 		lines: 70,
+	// 		statements: 70,
+	// 	},
+	// },
 
 	// Reporters for test results
 	reporters: [

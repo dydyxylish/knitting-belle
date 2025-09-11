@@ -12,9 +12,10 @@ const log = getLogger(import.meta.url);
 export const OrderDetailImageContainer = async ({
 	knittingPattern,
 }: OrderDetailImageContainerProps) => {
+	// TODO REFACTOR dbに検索条件を渡す
 	const topImage = (await getAllTopYarnCraftImage())
 		.filter((img) => img.knittingPatternSlug === knittingPattern.slug)
-		.pop();
+		.find((img) => img.sortOrder === 1);
 	if (!topImage) {
 		log.warn(
 			{ knittingPattern, topImage },

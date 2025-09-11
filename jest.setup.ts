@@ -51,11 +51,11 @@
 // process.env.STRIPE_CANCEL_URL = "https://example.com/cancel";
 
 // // Global test timeout
-// jest.setTimeout(10000);
+jest.setTimeout(10000);
 
 // Mock console methods to avoid noise during tests
-// global.console = {
-// 	...console,
-// 	warn: jest.fn(),
-// 	error: jest.fn(),
-// };
+global.console = {
+	...console,
+	warn: jest.fn(),
+	error: jest.fn(),
+};

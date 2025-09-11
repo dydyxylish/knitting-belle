@@ -7,6 +7,7 @@ import { parseKnittingPatternYaml } from "@/amplify/seed/data/parseFixture";
 import { extractSubFromAuthJson } from "@/e2e/playwright/utils/auth/extractSubFromAuthJson";
 import { findAuthPath } from "@/e2e/playwright/utils/auth/findAuthPath";
 import { generateAdminAuth } from "@/e2e/playwright/utils/auth/generateTestUserAuth";
+import { getFileName } from "@/e2e/playwright/utils/auth/getFileName";
 import { DELETE_PURCHASE_HISTORY_ENDPOINT } from "@/e2e/playwright/utils/const";
 import { webhookCheckoutCompleted } from "@/e2e/playwright/utils/stripe/webhookCheckoutCompleted";
 
@@ -14,7 +15,8 @@ import { webhookCheckoutCompleted } from "@/e2e/playwright/utils/stripe/webhookC
 test.describe
 	.serial("Purchase flow", () => {
 		let sampleKnittingPattern: Schema["KnittingPattern"]["type"];
-		const authPath = findAuthPath("purchase.spec.ts");
+		// import.meta.urlを使うように修正する
+		const authPath = findAuthPath(getFileName(import.meta.url));
 		const userId = extractSubFromAuthJson(authPath);
 
 		test.use({ storageState: authPath });

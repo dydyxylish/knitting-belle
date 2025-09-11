@@ -6,7 +6,10 @@ import {
 	generateAdminAuth,
 	generateTestUserAuth,
 } from "@/e2e/playwright/utils/auth/generateTestUserAuth";
-import { signInFlow } from "@/e2e/playwright/utils/auth/signInFlow";
+import {
+	signInFlow,
+	storeAuthState,
+} from "@/e2e/playwright/utils/auth/signInFlow";
 import {
 	CREATE_TEST_USER_ENDPOINT,
 	TEST_SPEC_FILES_GLOB,
@@ -36,6 +39,9 @@ specFiles
 				page,
 				username,
 				password,
+			});
+			await storeAuthState({
+				page,
 				authFilePath: generateTestUserAuth(file, sub),
 			});
 		});

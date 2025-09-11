@@ -3,8 +3,7 @@ import dayjs from "dayjs";
 import type { Schema } from "@/amplify/data/resource";
 import { env } from "@/lib/env";
 
-// expireAtがない場合はfalse（まだ一度も署名付きURLを生成していない。つまりはじめて/thanksページに遷移した状態）
-// 有効期限のenv.SIGNED_URL_EXPIRE_WARNING_MINUTES分前までの表示を許可する
+// 画面表示してからダウンロードボタンを押すまでの時間を考慮して、有効期限より少し前の時間になっているかをチェックする
 export function checkExpireAtIsNear(
 	purchaseHistory: Schema["PurchaseHistory"]["type"],
 ) {

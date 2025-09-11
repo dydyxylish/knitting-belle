@@ -12,6 +12,7 @@ import { parseKnittingPatternYaml } from "@/amplify/seed/data/parseFixture";
 import { extractSubFromAuthJson } from "@/e2e/playwright/utils/auth/extractSubFromAuthJson";
 import { findAuthPath } from "@/e2e/playwright/utils/auth/findAuthPath";
 import { generateAdminAuth } from "@/e2e/playwright/utils/auth/generateTestUserAuth";
+import { getFileName } from "@/e2e/playwright/utils/auth/getFileName";
 import {
 	CREATE_PURCHASE_HISTORY_ENDPOINT,
 	DELETE_PURCHASE_HISTORY_ENDPOINT,
@@ -20,7 +21,7 @@ import {
 // 異常系
 test.describe("Duplicate purchase", () => {
 	let sampleKnittingPattern: Schema["KnittingPattern"]["type"];
-	const authPath = findAuthPath("alreadyPurchased.spec.ts");
+	const authPath = findAuthPath(getFileName(import.meta.url));
 	const userId = extractSubFromAuthJson(authPath);
 	let adminRequest: APIRequestContext;
 

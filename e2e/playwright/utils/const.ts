@@ -8,6 +8,7 @@ export const CREATE_PURCHASE_HISTORY_ENDPOINT = `${TEST_API_ENDPOINT}/create-pur
 export const DELETE_PURCHASE_HISTORY_ENDPOINT = `${TEST_API_ENDPOINT}/delete-purchase-history`;
 export const CREATE_TEST_USER_ENDPOINT = `${TEST_API_ENDPOINT}/create-test-user`;
 export const DELETE_TEST_USER_ENDPOINT = `${TEST_API_ENDPOINT}/delete-test-user`;
+export const FETCH_USER_ATTRIBUTE_ENDPOINT = `${TEST_API_ENDPOINT}/fetch-user-attribute`;
 export const STRIPE_WEBHOOK_ENDPOINT = `${SERVICE_DOMAIN}/api/webhook/stripe`;
 export const TEST_SPEC_FILES_DIR =
 	"e2e/playwright/test/spec/with-precreated-user";

@@ -20,9 +20,6 @@ export const hasAlreadyKnittingPattern = async ({
 			await getPurchaseHistoryByOwnerKp({ user, knittingPatternSlug }),
 		{ withCookies: true },
 	);
-	if (purchaseHistory.length > 1) {
-		log.error({ purchaseHistory }, "購入履歴が重複しています");
-		return true;
-	}
-	return purchaseHistory.length === 1;
+	log.debug({ purchaseHistory }, "購入履歴を取得しました");
+	return purchaseHistory.length !== 0;
 };

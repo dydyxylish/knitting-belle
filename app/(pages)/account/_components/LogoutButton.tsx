@@ -6,7 +6,7 @@ export const LogoutButton = () => (
 	<a href="/api/auth/sign-out">
 		<Button variant="secondary" className="">
 			<LogOut />
-			<span>ログアウト</span>
+			ログアウト
 		</Button>
 	</a>
 );

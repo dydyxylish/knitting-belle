@@ -22,14 +22,18 @@ const deleteTestUserSchema = z.object({
 });
 
 export async function POST(req: Request) {
+	log.info("Delete test user API called");
 	const { credentials } = await runWithServer(fetchAuthSession);
 	const client = new CognitoIdentityProviderClient({
 		region: outputs.auth.aws_region,
 		credentials,
 	});
+	const body = await req.json();
+	log.info({ body }, "Request body received");
 
-	const validation = deleteTestUserSchema.safeParse(req.body);
+	const validation = deleteTestUserSchema.safeParse(body);
 	if (!validation.success) {
+		log.error({ validation }, "Validation failed");
 		return NextResponse.json(
 			{ error: validation.error.message },
 			{ status: 400 },
@@ -37,6 +41,7 @@ export async function POST(req: Request) {
 	}
 
 	const { sub } = validation.data;
+	log.info({ sub }, "テストユーザーを削除します");
 
 	try {
 		await client.send(

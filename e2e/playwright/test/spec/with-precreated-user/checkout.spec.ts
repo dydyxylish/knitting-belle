@@ -4,11 +4,12 @@ import { sample } from "es-toolkit";
 import type { Schema } from "@/amplify/data/resource";
 import { parseKnittingPatternYaml } from "@/amplify/seed/data/parseFixture";
 import { findAuthPath } from "@/e2e/playwright/utils/auth/findAuthPath";
+import { getFileName } from "@/e2e/playwright/utils/auth/getFileName";
 
 // 異常系
 test.describe("Checkout Negative Test", () => {
 	let sampleKnittingPattern: Schema["KnittingPattern"]["type"];
-	const authPath = findAuthPath("checkout.spec.ts");
+	const authPath = findAuthPath(getFileName(import.meta.url));
 
 	test.use({ storageState: authPath });
 
