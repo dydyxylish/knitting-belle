@@ -2,15 +2,20 @@
 
 import { CookiesProvider, useCookies } from "react-cookie";
 
-export const LoginWrapper = ({ children }: { children?: React.ReactNode }) => {
+interface LoginWrapperProps {
+	children: React.ReactNode;
+	provider: "Google" | "Email";
+}
+
+export const LoginWrapper = ({ children, provider }: LoginWrapperProps) => {
 	return (
 		<CookiesProvider>
-			<LoginAnchorLink>{children}</LoginAnchorLink>
+			<LoginAnchorLink provider={provider}>{children}</LoginAnchorLink>
 		</CookiesProvider>
 	);
 };
 
-const LoginAnchorLink = ({ children }: { children?: React.ReactNode }) => {
+const LoginAnchorLink = ({ children, provider }: LoginWrapperProps) => {
 	const [, setCookie, removeCookie] = useCookies(["redirectTo"]);
 
 	const onClickLogin = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -19,9 +24,13 @@ const LoginAnchorLink = ({ children }: { children?: React.ReactNode }) => {
 		setCookie("redirectTo", window.location.href);
 		window.location.href = event.currentTarget.href;
 	};
+	const href =
+		provider === "Email"
+			? `/api/auth/sign-in?lang=ja`
+			: `/api/auth/sign-in?lang=ja&provider=${provider}`;
 
 	return (
-		<a href="/api/auth/sign-in?provider=Google" onClick={onClickLogin}>
+		<a href={href} onClick={onClickLogin}>
 			{children}
 		</a>
 	);

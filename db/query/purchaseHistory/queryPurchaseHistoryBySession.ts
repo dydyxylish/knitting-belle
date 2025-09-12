@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import { dbClientWithAuth } from "@/db/serverSideClient";
 import { getLogger } from "@/lib/logger";
 
@@ -18,10 +16,6 @@ export const queryPurchaseHistoryBySession = async ({
 				filter: {
 					sessionId: {
 						eq: sessionId,
-					},
-					purchasedAt: {
-						// 作成されて24時間のみ有効(Thanksページ表示期限)
-						ge: dayjs().subtract(24, "hour").toISOString(),
 					},
 				},
 			});

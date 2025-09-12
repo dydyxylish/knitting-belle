@@ -1,20 +1,13 @@
-import { readFileSync } from "node:fs";
 import type { Client } from "aws-amplify/data";
-import { parse } from "yaml";
 
 import type { Schema } from "@/amplify/data/resource";
 import { getLogger } from "@/lib/logger";
+import { parseKnittingPatternYaml } from "./parseFixture";
 
 const log = getLogger(import.meta.url);
 
 export const createKnittingPattern = async (dbClient: Client<Schema>) => {
-	const yamlFile = readFileSync(
-		`${process.cwd()}/amplify/seed/data/asset/knittingPattern.yml`,
-		"utf8",
-	);
-	const knittingPatterns = parse(
-		yamlFile,
-	) as Schema["KnittingPattern"]["type"][];
+	const knittingPatterns = await parseKnittingPatternYaml();
 
 	const promises = knittingPatterns.map(async (knittingPattern) => {
 		try {

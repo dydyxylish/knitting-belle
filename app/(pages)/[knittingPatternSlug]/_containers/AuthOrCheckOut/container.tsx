@@ -1,6 +1,7 @@
+import { LoginDialog } from "@/app/_components/LoginDialog";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { CheckOutButton } from "../CheckOutButton";
-import { LoginDialog } from "./presentation";
+import { AuthOrCheckOutPresentation } from "./presentation";
 
 export interface AuthOrCheckOutContainerProps {
 	knittingPatternSlug: string;
@@ -9,9 +10,10 @@ export interface AuthOrCheckOutContainerProps {
 export const AuthOrCheckOutContainer = async ({
 	knittingPatternSlug,
 }: AuthOrCheckOutContainerProps) => {
-	return (await isAuthenticated()) ? (
+	const children = (await isAuthenticated()) ? (
 		<CheckOutButton knittingPatternSlug={knittingPatternSlug} />
 	) : (
 		<LoginDialog />
 	);
+	return <AuthOrCheckOutPresentation>{children}</AuthOrCheckOutPresentation>;
 };

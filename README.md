@@ -25,22 +25,8 @@ v20.19.2
 - [アカウント設定手順](https://docs.amplify.aws/react/start/account-setup/)を参照
 
 
-#### secret設定
-- 以下をsecretに設定
-```
-pnpm ampx sandbox secret KEY
-```
-- KEYS
-```
-SEED_USERNAME
-SEED_PASSWORD # Cognito標準のパスワードポリシーに準拠
-ADMIN_USERNAME
-ADMIN_PASSWORD # Cognito標準のパスワードポリシーに準拠
-
-```
-
 #### 環境変数設定
-- .env.localを作成する
+- .env.developmentを作成する
 ```
 AMPLIFY_APP_ORIGIN=http://localhost # createAuthRouteHandlersで使用
 GOOGLE_CALLBACK_URLS=http://localhost:3000/api/auth/sign-in-callback
@@ -48,15 +34,19 @@ GOOGLE_LOGOUT_URLS=http://localhost:3000/api/auth/sign-out-callback
 STRIPE_SUCCESS_URL=http://localhost:3000/thanks?session_id={CHECKOUT_SESSION_ID}
 STRIPE_CANCEL_URL=http://localhost:3000/cancel
 COOKIE_DOMAIN=localhost
-GOOGLE_CLIENT_ID=XXXXXXXXXXX
-GOOGLE_CLIENT_SECRET=XXXXXXXXXXX
 STRIPE_API_KEY=XXXXXXXXXXX
 STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 ```
 
+#### Secretを設定
+```
+❯ pnpm sandbox:set_secret GOOGLE_CLIENT_ID
+❯ pnpm sandbox:set_secret GOOGLE_CLIENT_SECRET
+```
+
 #### Amplify backendをデプロイ
 ```
-❯ pnpm dotenvx run --env-file=.env.local -- ampx sandbox
+❯ pnpm sandbox:create
 ```
 
 #### seed用のpolicyを生成
@@ -74,13 +64,27 @@ STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 
 #### seedを投入
 ```
-❯ pnpm dotenvx run --env-file=.env.local -- ampx sandbox seed --debug
+❯ pnpm dotenvx run -- ampx sandbox seed --debug
 ```
+
+#### Cognito Managed Loginを設定
+- AWS Console - Cognito - UserPool から、作成されたユーザープールを選択する
+- ブランディング - ドメイン から、Cognitoドメインのブランディングバージョンを「マネージドログイン」に変更する
+  - カスタムドメインを追加する場合は不要
+
 
 #### Next.js開発サーバを起動
 ```
 ❯ pnpm run dev
 ```
+
+
+### Stripe Webhook
+- [ngrok](https://ngrok.com/)をインストールし、以下のコマンドを実行する
+```
+ngrok http 3000
+```
+- 生成されたエンドポイントをStripe Dashboardに登録する
 
 
 ### 本番環境デモ
@@ -108,11 +112,46 @@ GOOGLE_LOGOUT_URLS=http://localhost:3000/api/auth/sign-out-callback
 STRIPE_SUCCESS_URL=http://localhost:3000/thanks?session_id={CHECKOUT_SESSION_ID}
 STRIPE_CANCEL_URL=http://localhost:3000/cancel
 COOKIE_DOMAIN=localhost
-GOOGLE_CLIENT_ID=XXXXXXXXXXX
-GOOGLE_CLIENT_SECRET=XXXXXXXXXXX
 STRIPE_API_KEY=XXXXXXXXXXX
 STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
 ```
 
 - Amplify.ymlにて、.envファイルに追記するよう指定する
-    - [指定方法](https://docs.amplify.aws/nextjs/deploy-and-host/fullstack-branching/secrets-and-vars/#branch-environment-2)
+    - [指定方法](https://docs.amplify.aws/nextjs/deploy-and-host/fullstack-branching/secrets-and-vars/#branch-environment-2)o
+
+#### Secret設定
+- Amplify ConsoleからSecretを設定する
+  - GOOGLE_CLIENT_ID
+  - GOOGLE_CLIENT_SECRET
+
+
+### (参考)Cognito Managed Login Branding Settingの出力
+- 以下をcloud shell で実行し、ファイルをダウンロードする
+```
+~ $ aws cognito-idp describe-managed-login-branding-by-client --user-pool-id ap-northeast-1_XXXXXXXX --client-id XXXXXXXXXXXXXXXXXXXXXXXXX | jq .ManagedLoginBranding.Settings > managedLoginBrandingSettings.json
+```
+
+### (参考)GitHub Actionsのデバッグ
+- [act](https://nektosact.com/)をインストールする
+
+- .secretをプロジェクトルートに作成する
+```
+ACTIONS_RUNNER_DEBUG=
+ACTIONS_STEP_DEBUG=
+AWS_ACCOUNT_ID=
+AWS_DEPLOY_ROLE=
+AWS_REGION=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_SESSION_TOKEN=
+ACTIONS_RUNTIME_TOKEN=
+CI_ENV_FILE=${cat .env}
+```
+
+- act実行
+```
+pnpm act:pr
+```
+

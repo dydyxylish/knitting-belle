@@ -8,10 +8,30 @@ backend:
         - pnpm install --frozen-lockfile
         - pnpm ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 
+# TODO ヒアドキュメントに変更する
 frontend:
   phases:
     build:
       commands:
+        - echo "AMPLIFY_APP_ORIGIN=$AMPLIFY_APP_ORIGIN" >> .env
+        - echo "GOOGLE_CALLBACK_URLS=$GOOGLE_CALLBACK_URLS" >> .env
+        - echo "GOOGLE_LOGOUT_URLS=$GOOGLE_LOGOUT_URLS" >> .env
+        - echo "STRIPE_SUCCESS_URL=$STRIPE_SUCCESS_URL" >> .env
+        - echo "STRIPE_CANCEL_URL=$STRIPE_CANCEL_URL" >> .env
+        - echo "COOKIE_DOMAIN=$COOKIE_DOMAIN" >> .env
+        - echo "SEED_BUCKET_ARN=$SEED_BUCKET_ARN" >> .env
+        - echo "SEED_BUCKET_REGION=$SEED_BUCKET_REGION" >> .env
+        - echo "ADMIN_USERNAME=$ADMIN_USERNAME" >> .env
+        - echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
+        - echo "STRIPE_API_KEY=$STRIPE_API_KEY" >> .env
+        - echo "STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET" >> .env
+        - echo "INSTAGRAM_URL=$INSTAGRAM_URL" >> .env
+        - echo "NEXT_PUBLIC_CONTACT_EMAIL=$NEXT_PUBLIC_CONTACT_EMAIL" >> .env
+        - echo "SIGNED_URL_EXPIRE_MINUTES=$SIGNED_URL_EXPIRE_MINUTES" >> .env
+        - echo "SIGNED_URL_EXPIRE_WARNING_MINUTES=$SIGNED_URL_EXPIRE_WARNING_MINUTES" >> .env
+        - echo "TEST_ADMIN_USERNAME=$TEST_ADMIN_USERNAME" >> .env
+        - echo "TEST_ADMIN_PASSWORD=$TEST_ADMIN_PASSWORD" >> .env
+        - echo "ENABLE_TEST_API=$ENABLE_TEST_API" >> .env
         - pnpm build
   artifacts:
     baseDirectory: .next
@@ -20,4 +40,5 @@ frontend:
   cache:
     paths:
       - .next/cache/**/*
-      - .pnpm-store/**/*
+      - ~/.pnpm-store/**/*
+      - node_modules/.cache/**/*

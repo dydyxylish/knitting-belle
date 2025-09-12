@@ -1,0 +1,13 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"noEmit": true
+	},
+	"include": ["./playwright/**/*"],
+	"exclude": ["../node_modules", "../amplify"]
+}

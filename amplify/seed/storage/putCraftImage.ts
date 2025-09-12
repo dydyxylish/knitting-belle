@@ -12,7 +12,9 @@ export const putCraftImage = async () => {
 	});
 
 	const promises = images.items
-		.filter((item) => item.path?.match(/\.jpg$/i))
+		.filter((item) =>
+			item.path?.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg|avif|heic)$/i),
+		)
 		.map(async (image) => {
 			await copyFile({
 				source: {

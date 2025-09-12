@@ -1,16 +1,14 @@
 import "server-only";
 import { fetchAuthSession } from "aws-amplify/auth/server";
-import { cookies } from "next/headers";
 
-import { runWithAmplifyServerContext } from "@/app/_lib/amplifyServerUtils";
+import { runWithServerContext } from "@/app/_lib/createAmplifyServerRunner";
 import { getLogger } from "@/lib/logger";
 
 const log = getLogger(import.meta.url);
 
 export const isAuthenticated = async () => {
-	const authenticated = await runWithAmplifyServerContext({
-		nextServerContext: { cookies },
-		operation: async (contextSpec) => {
+	const authenticated = await runWithServerContext(
+		async (contextSpec) => {
 			try {
 				const session = await fetchAuthSession(contextSpec);
 				log.debug({ session }, "セッションを取得しました");
@@ -23,6 +21,7 @@ export const isAuthenticated = async () => {
 				return false;
 			}
 		},
-	});
+		{ withCookies: true },
+	);
 	return authenticated;
 };

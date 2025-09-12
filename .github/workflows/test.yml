@@ -1,0 +1,249 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  install:
+    name: Install dependencies
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+  sandbox:
+    name: Create Sandbox
+    needs: install
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      DOTENV_ENV: ci
+      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
+    permissions:
+      contents: read
+      id-token: write # oidc用
+    outputs:
+      amplify-cache-hit: ${{ steps.amplify_outputs_cache.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # setup env
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+
+      - name: Set env only in act
+        if: ${{ env.ACT }}
+        run: echo "ACTIONS_RUNTIME_TOKEN=${{ secrets.ACTIONS_RUNTIME_TOKEN }}" >> $GITHUB_ENV
+
+      # configure aws credentials
+      - name: Configure AWS Credentials（GitHub Actions）
+        if: ${{ !env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+          role-session-name: githubActionsForSetup
+
+      - name: Configure AWS Credentials（Act）
+        if: ${{ env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Restore node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Set Sandbox Secret
+        run: |
+          printf "%s" "${{ secrets.GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
+          printf "%s" "${{ secrets.GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET
+
+      # ディレクトリのハッシュをキーにキャッシュを取得
+      - name: Restore amplify_outputs.json cache
+        id: amplify_outputs_cache
+        uses: actions/cache@v4
+        with:
+          path: amplify_outputs.json
+          key: amplify_outputs-${{ github.ref_name }}-${{ hashFiles('amplify/**') }}
+
+      # キャッシュがなければSandboxを作成
+      - name: Create Sandbox
+        if: steps.amplify_outputs_cache.outputs.cache-hit != 'true'
+        run: |
+          echo "No cache hit. Creating Sandbox..."
+          pnpm sandbox:create --identifier ${{ env.SANDBOX_NAME }} --once
+          pnpm sandbox:seed --identifier ${{ env.SANDBOX_NAME }}
+
+      # amplify_outputs.jsonをアーティファクトとして保存
+      - name: Upload amplify_outputs.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: amplify-outputs
+          path: amplify_outputs.json
+          retention-days: 1
+
+  jest:
+    name: Run Jest tests
+    needs: [install, sandbox]
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      DOTENV_ENV: ci
+      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # setup env
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Restore node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      # amplify_outputs.jsonをダウンロード
+      - name: Download amplify_outputs.json
+        uses: actions/download-artifact@v4
+        with:
+          name: amplify-outputs
+          path: .
+
+      - name: Run Jest tests
+        run: pnpm test:ci
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 30
+
+  playwright:
+    name: Run Playwright tests
+    needs: [install, sandbox]
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      DOTENV_ENV: ci
+      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # setup env
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Restore node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      # amplify_outputs.jsonをダウンロード
+      - name: Download amplify_outputs.json
+        uses: actions/download-artifact@v4
+        with:
+          name: amplify-outputs
+          path: .
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps
+
+      - name: Build Next.js
+        run: pnpm build
+
+      - name: Start Next.js
+        run: pnpm pm2:start
+
+      - name: Wait for Next.js to start
+        run: pnpm wait:e2e
+
+      - name: Run Playwright tests
+        run: pnpm e2e
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Stop Next.js
+        run: pnpm pm2:stop

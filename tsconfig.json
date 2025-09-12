@@ -22,6 +22,14 @@
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-	"exclude": ["node_modules", "amplify"]
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"app/(pages)/account/_containers/DownloadButton",
+		"cypress/scripts/**/*.mjs",
+		"e2e/playwright/test/**/*.ts"
+	],
+	"exclude": ["node_modules", "amplify", "e2e"]
 }

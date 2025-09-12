@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
+import "server-only";
 
 import { getPurchaseHistoryByOwnerKp } from "@/db/repository/purchaseHistory/getPurchaseHistoryByOwnerKp";
 import { getLogger } from "@/lib/logger";
-import { runWithAmplifyServerContext } from "../../amplifyServerUtils";
+import { runWithServerContext } from "../../createAmplifyServerRunner";
 
 interface hasAlreadyKnittingPatternArgs {
 	user: string;
@@ -15,14 +15,11 @@ export const hasAlreadyKnittingPattern = async ({
 	user,
 	knittingPatternSlug,
 }: hasAlreadyKnittingPatternArgs) => {
-	const purchaseHistory = await runWithAmplifyServerContext({
-		nextServerContext: { cookies },
-		operation: async () =>
+	const purchaseHistory = await runWithServerContext(
+		async () =>
 			await getPurchaseHistoryByOwnerKp({ user, knittingPatternSlug }),
-	});
-	if (purchaseHistory.length > 1) {
-		log.error({ purchaseHistory }, "購入履歴が重複しています");
-		return true;
-	}
-	return purchaseHistory.length === 1;
+		{ withCookies: true },
+	);
+	log.debug({ purchaseHistory }, "購入履歴を取得しました");
+	return purchaseHistory.length !== 0;
 };

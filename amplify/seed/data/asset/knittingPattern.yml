@@ -33,6 +33,7 @@
       4.	SNSなどで作品を投稿する際は、私のInstagramのアカウント名（@knitting_belle）などを記載していただけると嬉しいです。
   price: 300
   isPublished: true
+  downloadCount: 13
 
 - slug: "silverFrillPouch"
   title: "シルバーフリルバッグ編み図（Silver Frill Pouch）"
@@ -54,6 +55,7 @@
       4.	SNSなどで作品を投稿する際は、私のInstagramのアカウント名（@knitting_belle）などを記載していただけると嬉しいです。
   price: 300
   isPublished: true
+  downloadCount: 39
 
 - slug: "puffyCrochetDrawstringBag"
   title: "ポコポコ巾着バッグ編み図（Puffy Crochet Drawstring Bag）"
@@ -74,3 +76,39 @@
       4.	SNSなどで作品を投稿する際は、私のInstagramのアカウント名（@knitting_belle）などを記載していただけると嬉しいです。
   price: 300
   isPublished: true
+  downloadCount: 15
+
+- slug: "openworkKnitDogShirt"
+  title: "透かし編みニットドッグシャツ編み図（Openwork Knit Dog Shirt）"
+  description: |
+    夏にぴったりの、涼しげな透かし編みの犬用サマーニットです🐶
+
+    カラーや使用する毛糸を変えることで、春や秋のお出かけにも◎
+    季節を問わず活躍する、シンプルでかわいいデザインです。
+
+    ＼ここがポイント！／
+    ・写真＆イラスト付きの全12ページで丁寧解説
+    ・各工程でサイズ調整のコツも紹介
+    ・材料費は約500円（Lサイズ目安）とお手頃◎
+
+
+    初めてのペット服づくりにも安心してチャレンジできます♡
+
+    お揃いのシャツを編んで、わんちゃんと一緒にお散歩するのも素敵です！
+
+    【材料・道具】
+    ・ユザワヤ ウォッシャブルコットン 109 4玉
+    ・ボタン 13mm 6個
+    ・かぎ針 4/0号
+    ・はさみ
+    ・とじ針
+    ・刺繍糸
+  attention: |
+    【編み図ご利用時の注意事項】
+      1.	独学で作成した編み図のため、ご自身で調整しながら編んでいただけると幸いです。
+      2.	販売目的での使用（完成品の販売・編み図の転売など）はご遠慮ください。
+      3.	編み図の再配布や他の方への共有は禁止です。
+      4.	 SNSなどで作品を投稿する際は、私のInstagramのアカウント名（@knitting_belle）などを記載していただけると嬉しいです。
+  price: 500
+  isPublished: true
+  downloadCount: 11

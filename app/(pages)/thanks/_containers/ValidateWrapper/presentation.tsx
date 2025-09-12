@@ -1,13 +1,9 @@
-import type { Schema } from "@/amplify/data/resource";
-
 interface ValidateWrapperPresentationProps {
 	children: React.ReactNode;
-	purchaseHistory: Schema["PurchaseHistory"]["type"];
 }
 
 export const ValidateWrapperPresentation = async ({
 	children,
-	purchaseHistory,
-}: ValidateWrapperPresentationProps) => {
-	return <div>{children}</div>;
-};
+}: ValidateWrapperPresentationProps) => (
+	<div className="flex flex-col items-center gap-12 px-8">{children}</div>
+);

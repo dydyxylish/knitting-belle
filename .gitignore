@@ -48,3 +48,16 @@ seed-policy.json
 .http
 
 .env
+.env.test
+env
+
+.serena
+
+playwright-report
+test-results
+e2e/playwright/.auth/*
+
+videos
+.secrets
+.act/log
+.artifacts
