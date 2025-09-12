@@ -2,7 +2,9 @@
 import Image from "next/image";
 import type React from "react";
 
-import { ImageSkelton } from "./ImageSkelton";
+// 静的なプレースホルダー（サーバー/クライアント共通）
+const PLACEHOLDER_SVG =
+	"data:image/svg+xml;charset=utf-8,%3Csvg width='72' height='56' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23d1d5db'/%3E%3C/svg%3E";
 
 type PropType = {
 	selected: boolean;
@@ -23,7 +25,8 @@ export const Thumb: React.FC<PropType> = ({ selected, imgSrc, onClick }) => {
 				className="h-full w-full object-cover"
 				width={72}
 				height={56}
-				placeholder={`data:image/svg+xml;base64,${window.btoa(ImageSkelton(72, 56))}`}
+				placeholder="blur"
+				blurDataURL={PLACEHOLDER_SVG}
 			/>
 		</button>
 	);

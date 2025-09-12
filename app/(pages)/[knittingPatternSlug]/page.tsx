@@ -5,6 +5,8 @@ import { getCachedKnittingPatternList } from "@/app/_lib/fetch/knittingPattern/g
 import { AuthOrCheckOut } from "./_containers/AuthOrCheckOut";
 import { DetailKnittingPattern } from "./_containers/DetailKnittingPattern";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
 	const knittingPatternList = await getCachedKnittingPatternList();
 	return knittingPatternList.map(({ slug }) => ({ knittingPatternSlug: slug }));

@@ -1,12 +1,12 @@
-import type { Schema } from "@/amplify/data/resource";
-import { getImagePaths } from "@/app/_lib/fetch/yarnCraftImage/getImagePaths";
+"use client";
+
 import { ThumbnailCarousel } from "../_components/ThumbnailCarousel";
 
 interface DetailYarnCraftImagePresentationProps {
-	yarnCraftImages: Schema["YarnCraftImage"]["type"][];
+	slides: string[];
 }
 export const DetailYarnCraftImagePresentation = ({
-	yarnCraftImages,
+	slides,
 }: DetailYarnCraftImagePresentationProps) => {
-	return <ThumbnailCarousel slides={getImagePaths({ yarnCraftImages })} />;
+	return <ThumbnailCarousel slides={slides} />;
 };

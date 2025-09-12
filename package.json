@@ -2,7 +2,14 @@
 	"name": "knitting_belle",
 	"version": "0.1.0",
 	"private": true,
-	"type": "module",
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "NodeNext",
+		"esModuleInterop": true,
+		"strict": true,
+		"outDir": "dist"
+	},
 	"engines": {
 		"node": ">=20",
 		"pnpm": ">=10"

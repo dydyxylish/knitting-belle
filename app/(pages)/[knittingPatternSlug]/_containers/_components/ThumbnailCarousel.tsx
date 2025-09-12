@@ -3,7 +3,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
 
 import type { CarouselOptions } from "@/app/_components/ui/carousel";
 import { ScrollArea, ScrollBar } from "@/app/_components/ui/scroll-area";
@@ -49,7 +48,7 @@ export const ThumbnailCarousel: React.FC<PropType> = ({ slides, options }) => {
 			<div className="overflow-hidden" ref={emblaMainRef}>
 				<div className="flex">
 					{slides.map((url, index) => (
-						<div className="flex-[0_0_100%]" key={uuidV4()}>
+						<div className="flex-[0_0_100%]" key={url}>
 							<Image
 								src={url}
 								alt={`slide-${index}`}
@@ -68,7 +67,7 @@ export const ThumbnailCarousel: React.FC<PropType> = ({ slides, options }) => {
 				<div className="flex gap-2 p-2">
 					{slides.map((url, index) => (
 						<Thumb
-							key={uuidV4()}
+							key={url}
 							onClick={() => onThumbClick(index)}
 							selected={index === selectedIndex}
 							imgSrc={url}
