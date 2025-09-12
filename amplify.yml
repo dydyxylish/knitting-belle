@@ -7,6 +7,7 @@ backend:
         - corepack prepare pnpm@10.12.1 --activate
         - pnpm install --frozen-lockfile
         - pnpm ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        - pnpm sandbox:seed
 
 # TODO ヒアドキュメントに変更する
 frontend:
