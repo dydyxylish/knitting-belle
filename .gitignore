@@ -63,3 +63,5 @@ videos
 .artifacts
 
 dist
+cdk.out
+cdk.context.json

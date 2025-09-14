@@ -2,7 +2,6 @@ import { defineBackend } from "@aws-amplify/backend";
 
 import { auth } from "./auth/resource.js";
 import { configureCognitoPolicies } from "./config/cognitoPolicies.js";
-import { configureManagedLoginBranding } from "./config/managedLoginBranding.js";
 import { configureSeedBucket } from "./config/seedBucket.js";
 import { configureYarnCraftImageBucket } from "./config/yarnCraftImageBucket.js";
 import { data } from "./data/resource.js";
@@ -21,4 +20,3 @@ const backend = defineBackend({
 configureSeedBucket(backend);
 configureCognitoPolicies(backend);
 configureYarnCraftImageBucket(backend);
-configureManagedLoginBranding(backend);
