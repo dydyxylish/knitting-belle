@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
 	AdminAddUserToGroupCommand,
 	AdminCreateUserCommand,
@@ -5,8 +7,7 @@ import {
 	CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
 
-import outputs from "@/amplify_outputs.json";
-import { getLogger } from "@/lib/logger";
+import { getLogger } from "../../lib/logger";
 
 const log = getLogger(import.meta.url);
 
@@ -105,6 +106,10 @@ async function main() {
 		) {
 			throw new Error("管理者アカウントの環境変数が設定されていません");
 		}
+
+		// amplify_outputs.jsonを動的に読み込み
+		const outputsPath = join(process.cwd(), "amplify_outputs.json");
+		const outputs = JSON.parse(readFileSync(outputsPath, "utf-8"));
 
 		const userPoolId = outputs.auth?.user_pool_id;
 

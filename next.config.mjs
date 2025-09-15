@@ -13,10 +13,20 @@ export default {
 				throw new Error("バケット設定に不備があります");
 			}
 
+			let imageHostname;
+			if (
+				process.env.AMPLIFY_PRODUCTION === "true" &&
+				outputs.custom?.cdnDomain
+			) {
+				imageHostname = outputs.custom.cdnDomain;
+			} else {
+				imageHostname = `${imageBucket.bucket_name}.s3.${imageBucket.aws_region}.amazonaws.com`;
+			}
+
 			return [
 				{
 					protocol: "https",
-					hostname: `${imageBucket.bucket_name}.s3.${imageBucket.aws_region}.amazonaws.com`,
+					hostname: imageHostname,
 				},
 				{
 					protocol: "https",

@@ -2,6 +2,7 @@
 	"name": "knitting_belle",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
@@ -35,9 +36,6 @@
 		"sandbox:seed": "pnpm ampx sandbox seed --debug",
 		"sandbox:set_secret": "pnpm ampx sandbox secret set",
 		"sandbox:delete_secret": "pnpm ampx sandbox secret remove",
-		"deploy:managed-login": "pnpm dotenv cdk deploy ManagedLoginStack --require-approval never",
-		"destroy:managed-login": "pnpm dotenv cdk destroy ManagedLoginStack --force",
-		"diff:managed-login": "pnpm dotenv cdk diff ManagedLoginStack",
 		"create:admin-users": "pnpm dotenv tsx amplify/script/createAdminUsers.ts",
 		"act:pr": "act pull_request -e .act/event/pr-synchronize.json > .act/log/act.pr-synchronize.log 2>&1",
 		"act:pr:closed": "act pull_request -e .act/event/pr-closed.json > .act/log/act.pr-closed.log 2>&1",

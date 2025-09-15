@@ -1,14 +1,17 @@
 import { defineBackend } from "@aws-amplify/backend";
 
-import { auth } from "./auth/resource.js";
-import { configureCognitoPolicies } from "./config/cognitoPolicies.js";
-import { configureSeedBucket } from "./config/seedBucket.js";
-import { configureYarnCraftImageBucket } from "./config/yarnCraftImageBucket.js";
-import { data } from "./data/resource.js";
+import { env } from "@/lib/env";
+import { auth } from "./auth/resource";
+import { configureCloudFront } from "./config/cloudfront";
+import { configureCognitoPolicies } from "./config/cognitoPolicies";
+import { configureManagedLogin } from "./config/managedLogin";
+import { configureSeedBucket } from "./config/seedBucket";
+import { configureYarnCraftImageBucket } from "./config/yarnCraftImageBucket";
+import { data } from "./data/resource";
 import {
 	knittingPatternStorage,
 	yarnCraftImageStorage,
-} from "./storage/resource.js";
+} from "./storage/resource";
 
 const backend = defineBackend({
 	auth,
@@ -20,3 +23,8 @@ const backend = defineBackend({
 configureSeedBucket(backend);
 configureCognitoPolicies(backend);
 configureYarnCraftImageBucket(backend);
+
+if (env.AMPLIFY_PRODUCTION) {
+	configureCloudFront(backend);
+	configureManagedLogin(backend);
+}

@@ -6,17 +6,19 @@ backend:
         - corepack enable
         - corepack prepare pnpm@10.12.1 --activate
         - pnpm install --frozen-lockfile
-        - pnpm ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
-    postBuild:
-      commands:
-        - pnpm ampx generate outputs --branch $AWS_BRANCH --app-id $AWS_APP_ID
-        - echo "📦 Amplify backendデプロイ完了。ManagedLoginStackをデプロイします..."
-        - echo "HOSTED_ZONE_DOMAIN=$HOSTED_ZONE_DOMAIN" >> .env
+        - echo "AMPLIFY_PRODUCTION=$AMPLIFY_PRODUCTION" >> .env
+        - echo "ENABLE_TEST_API=$ENABLE_TEST_API" >> .env
+        - echo "HOSTZONE_ID=$HOSTZONE_ID" >> .env
+        - echo "HOSTZONE_NAME=$HOSTZONE_NAME" >> .env
         - echo "MANAGED_LOGIN_SUBDOMAIN=$MANAGED_LOGIN_SUBDOMAIN" >> .env
         - echo "MANAGED_LOGIN_DOMAIN=$MANAGED_LOGIN_DOMAIN" >> .env
         - echo "CERTIFICATE_ARN=$CERTIFICATE_ARN" >> .env
-        - pnpm run deploy:managed-login
-        - echo "👥 管理者ユーザーを作成します..."
+        - echo "CDN_DOMAIN=$CDN_DOMAIN" >> .env
+        - echo "CDN_SUBDOMAIN=$CDN_SUBDOMAIN" >> .env
+        - pnpm ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+    postBuild:
+      commands:
+        - echo "👥 管理者ユーザーを作成します"
         - echo "ADMIN_USERNAME=$ADMIN_USERNAME" >> .env
         - echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
         - echo "TEST_ADMIN_USERNAME=$TEST_ADMIN_USERNAME" >> .env
@@ -28,6 +30,8 @@ frontend:
   phases:
     build:
       commands:
+        - echo "AMPLIFY_PRODUCTION=$AMPLIFY_PRODUCTION" >> .env
+        - echo "ENABLE_TEST_API=$ENABLE_TEST_API" >> .env
         - echo "AMPLIFY_APP_ORIGIN=$AMPLIFY_APP_ORIGIN" >> .env
         - echo "GOOGLE_CALLBACK_URLS=$GOOGLE_CALLBACK_URLS" >> .env
         - echo "GOOGLE_LOGOUT_URLS=$GOOGLE_LOGOUT_URLS" >> .env
@@ -46,7 +50,6 @@ frontend:
         - echo "SIGNED_URL_EXPIRE_WARNING_MINUTES=$SIGNED_URL_EXPIRE_WARNING_MINUTES" >> .env
         - echo "TEST_ADMIN_USERNAME=$TEST_ADMIN_USERNAME" >> .env
         - echo "TEST_ADMIN_PASSWORD=$TEST_ADMIN_PASSWORD" >> .env
-        - echo "ENABLE_TEST_API=$ENABLE_TEST_API" >> .env
         - pnpm build
   artifacts:
     baseDirectory: .next

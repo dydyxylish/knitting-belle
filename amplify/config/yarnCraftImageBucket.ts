@@ -1,24 +1,13 @@
 import { ArnPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
+import { env } from "../../lib/env.js";
 import type { BackendInstance } from "./types.js";
 
 export function configureYarnCraftImageBucket(backend: BackendInstance) {
 	const adminRole = backend.auth.resources.groups.admin.role;
-
-	// 編み図作品画像へのpublic access許可、admin roleにput権限付与
-	const cfnYarnCraftImageBucket =
-		backend.yarnCraftImageStorage.resources.cfnResources.cfnBucket;
-	cfnYarnCraftImageBucket.addPropertyOverride(
-		"PublicAccessBlockConfiguration.BlockPublicPolicy",
-		false,
-	);
-	cfnYarnCraftImageBucket.addPropertyOverride(
-		"PublicAccessBlockConfiguration.RestrictPublicBuckets",
-		false,
-	);
-
 	const yarnCraftImageBucket = backend.yarnCraftImageStorage.resources.bucket;
-	yarnCraftImageBucket.grantPublicAccess("yarnCraftImage/*");
+
+	// admin roleにput権限付与（開発・本番共通）
 	yarnCraftImageBucket.addToResourcePolicy(
 		//grantPutだと CloudformationStackCircularDependencyError のため
 		new PolicyStatement({
@@ -28,4 +17,20 @@ export function configureYarnCraftImageBucket(backend: BackendInstance) {
 			resources: [`${yarnCraftImageBucket.bucketArn}/yarnCraftImage/*`],
 		}),
 	);
+
+	// 開発環境でのみパブリックアクセスを許可
+	if (!env.AMPLIFY_PRODUCTION) {
+		const cfnYarnCraftImageBucket =
+			backend.yarnCraftImageStorage.resources.cfnResources.cfnBucket;
+		cfnYarnCraftImageBucket.addPropertyOverride(
+			"PublicAccessBlockConfiguration.BlockPublicPolicy",
+			false,
+		);
+		cfnYarnCraftImageBucket.addPropertyOverride(
+			"PublicAccessBlockConfiguration.RestrictPublicBuckets",
+			false,
+		);
+
+		yarnCraftImageBucket.grantPublicAccess("yarnCraftImage/*");
+	}
 }
