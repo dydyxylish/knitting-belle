@@ -2,10 +2,10 @@
 	"action": "synchronize",
 	"pull_request": {
 		"number": 42,
-		"url": "https://api.github.com/repos/dydyxylish/belle_knit_pattern/pull/42",
+		"url": "https://api.github.com/repos/dydyxylish/knitting-belle/pull/42",
 		"id": 123456789,
 		"node_id": "PR_kwDOExample",
-		"html_url": "https://github.com/dydyxylish/belle_knit_pattern/pull/42",
+		"html_url": "https://github.com/dydyxylish/knitting-belle/pull/42",
 		"title": "Add new feature",
 		"user": {
 			"login": "username",

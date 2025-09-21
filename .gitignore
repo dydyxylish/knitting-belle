@@ -49,6 +49,13 @@ seed-policy.json
 
 .env
 .env.test
+.env.local
+.env.development
+.env.production
+.env.ci
+.env.development.local
+.env.production.local
+.env.ci.local
 env
 
 .serena
@@ -65,3 +72,10 @@ videos
 dist
 cdk.out
 cdk.context.json
+
+# sst
+.sst
+
+
+# open-next
+.open-next

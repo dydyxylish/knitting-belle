@@ -14,11 +14,8 @@ export default {
 			}
 
 			let imageHostname;
-			if (
-				process.env.AMPLIFY_PRODUCTION === "true" &&
-				outputs.custom?.cdnDomain
-			) {
-				imageHostname = outputs.custom.cdnDomain;
+			if (process.env.AMPLIFY_PRODUCTION === "true") {
+				imageHostname = process.env.CDN_DOMAIN;
 			} else {
 				imageHostname = `${imageBucket.bucket_name}.s3.${imageBucket.aws_region}.amazonaws.com`;
 			}
@@ -48,4 +45,37 @@ export default {
 			return [];
 		}
 	},
+	headers: async () => [
+		{
+			source: "/(.*)",
+			headers: [
+				{
+					key: "X-Frame-Options",
+					value: "DENY",
+				},
+				{
+					key: "X-Content-Type-Options",
+					value: "nosniff",
+				},
+			],
+		},
+		{
+			source: "/(.*)\\.(ico|png|jpg|jpeg|gif|webp|svg|css|js)",
+			headers: [
+				{
+					key: "Cache-Control",
+					value: "public, max-age=31536000, immutable",
+				},
+			],
+		},
+		{
+			source: "/_next/static/(.*)",
+			headers: [
+				{
+					key: "Cache-Control",
+					value: "public, max-age=31536000, immutable",
+				},
+			],
+		},
+	],
 };

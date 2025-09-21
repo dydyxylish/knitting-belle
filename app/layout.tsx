@@ -14,16 +14,38 @@ export const metadata: Metadata = {
 	title: "Knitting Belle",
 	description:
 		"Knitting Belleの編み図ダウンロードサイト(Knitting pattern download site by knitting_belle)",
+	keywords: [
+		"編み図",
+		"編み物",
+		"手編み",
+		"ニット",
+		"かぎ針",
+		"棒針",
+		"毛糸",
+		"クラフト",
+	],
+	authors: [{ name: "knitting_belle" }],
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
+		},
+	},
 	openGraph: {
 		type: "website",
 		title: "Knitting Belle｜編み図販売サイト",
 		description:
 			"オリジナルの編み図をダウンロード販売。初心者から上級者まで楽しめるデザインが満載。",
-		// url: "https://knittingbelle.com", // TODO 実際のドメインに変更
+		// url: "https://knitting-belle.com", // TODO 実際のドメインに変更
 		siteName: "Knitting Belle",
 		// images: [
 		// 	{
-		// 		url: "https://knittingbelle.com/ogp.png", // TODO OGP画像があるなら指定
+		// 		url: "https://knitting-belle.com/ogp.png", // TODO OGP画像があるなら指定
 		// 		width: 1200,
 		// 		height: 630,
 		// 		alt: "Knitting Belle 編み図販売サイト",
@@ -35,7 +57,7 @@ export const metadata: Metadata = {
 	// 	title: "Knitting Belle｜編み図販売サイト",
 	// 	description:
 	// 		"オリジナルの編み図をダウンロード販売。初心者から上級者まで楽しめるデザインが満載。",
-	// 	images: ["https://knittingbelle.com/ogp.png"], // TODO
+	// 	images: ["https://knitting-belle.com/ogp.png"], // TODO
 	// },
 };
 

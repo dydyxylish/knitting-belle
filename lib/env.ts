@@ -61,6 +61,8 @@ const EnvSchema = z
 		HOSTZONE_NAME: z.string().optional(),
 		MANAGED_LOGIN_DOMAIN: z.string().optional(),
 		MANAGED_LOGIN_SUBDOMAIN: z.string().optional(),
+		APP_DOMAIN: z.string().optional(),
+		CDK_DEFAULT_ACCOUNT: z.string().optional(),
 	})
 	.superRefine((data, ctx) => {
 		// ENABLE_TEST_APIとAMPLIFY_PRODUCTIONの相互排他制約
@@ -83,6 +85,8 @@ const EnvSchema = z
 			"HOSTZONE_NAME",
 			"MANAGED_LOGIN_DOMAIN",
 			"MANAGED_LOGIN_SUBDOMAIN",
+			"APP_DOMAIN",
+			"CDK_DEFAULT_ACCOUNT",
 		] as const;
 
 		for (const field of requiredInProduction) {

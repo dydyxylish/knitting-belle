@@ -1,0 +1,114 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches: develop
+
+jobs:
+  install:
+    name: Install dependencies
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+  deploy:
+    name: Deploy
+    needs: install
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # oidc用
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set env only in act
+        if: ${{ env.ACT }}
+        run: echo "ACTIONS_RUNTIME_TOKEN=${{ secrets.ACTIONS_RUNTIME_TOKEN }}" >> $GITHUB_ENV
+
+      # configure aws credentials
+      - name: Configure AWS Credentials（GitHub Actions）
+        if: ${{ !env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+          role-session-name: githubActionsForSetup
+
+      - name: Configure AWS Credentials（Act）
+        id: creds
+        if: ${{ env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # setup env
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.DEV_ENV_FILE }}" > .env
+
+      - name: Corepack enable
+        run: corepack enable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Restore node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Set Sandbox Secret
+        run: |
+          printf "%s" "${{ secrets.DEV_GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ github.ref_name }} GOOGLE_CLIENT_ID
+          printf "%s" "${{ secrets.DEV_GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ github.ref_name }} GOOGLE_CLIENT_SECRET
+
+      - name: Deploy backend
+        run: |
+          pnpm sandbox:create --identifier ${{ github.ref_name }} --once
+          pnpm sandbox:seed --identifier ${{ github.ref_name }}
+
+      - name: Deploy frontend
+        run: |
+          pnpm sst:deploy --stage ${{ github.ref_name }}
+
+      - name: Deploy Cognito Managed Login
+        run: pnpm deploy:managed-login --ci --verbose
+
+      - name: Upload Amplify Outputs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: amplify-outputs
+          path: amplify_outputs.json
+          retention-days: 30
