@@ -1,3 +1,4 @@
+import * as cdk from "aws-cdk-lib";
 import * as certificatemanager from "aws-cdk-lib/aws-certificatemanager";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
@@ -26,6 +27,45 @@ export function configureCloudFront(backend: BackendInstance) {
 		env.CERTIFICATE_ARN || "",
 	);
 
+	const imageCachePolicy = new cloudfront.CachePolicy(
+		bucketScope,
+		"ImageCachePolicy",
+		{
+			cachePolicyName: "CustomImageCachePolicy",
+			defaultTtl: cdk.Duration.days(365), // デフォルト 365日キャッシュ
+			minTtl: cdk.Duration.days(1), // 最小 1日
+			maxTtl: cdk.Duration.days(365), // 最大 365日
+			headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+			cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+			queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+		},
+	);
+
+	const responseHeadersPolicy = new cloudfront.ResponseHeadersPolicy(
+		bucketScope,
+		"CustomResponseHeadersPolicy",
+		{
+			responseHeadersPolicyName: "AddCacheControlAndExpires",
+			comment: "Add Cache-Control and Expires headers for images",
+			customHeadersBehavior: {
+				customHeaders: [
+					{
+						header: "Cache-Control",
+						value: "public, max-age=31536000, immutable",
+						override: true,
+					},
+					{
+						header: "Expires",
+						value: new Date(
+							Date.now() + 365 * 24 * 60 * 60 * 1000,
+						).toUTCString(),
+						override: true,
+					},
+				],
+			},
+		},
+	);
+
 	// CloudFrontディストリビューションを作成
 	const distribution = new cloudfront.Distribution(
 		bucketScope,
@@ -41,7 +81,8 @@ export function configureCloudFront(backend: BackendInstance) {
 				),
 				viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 				compress: true,
-				cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+				cachePolicy: imageCachePolicy,
+				responseHeadersPolicy: responseHeadersPolicy,
 			},
 			domainNames: [env.CDN_DOMAIN || ""],
 			certificate: certificate,

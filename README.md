@@ -1,4 +1,4 @@
-## Knitting_belle 編み図ダウンロードサイト
+## Knitting Belle 編み図ダウンロードサイト
 
 ### 概要
 
@@ -6,7 +6,7 @@ Knitting Belle は編み図のダウンロード販売サイトです。
 編み手さん向けに編み図を購入・ダウンロードできるプラットフォームを提供します。
 
 #### 主な機能
-- **編み図パターンの販売・購入**: Stripe決済を通じた安全な購入システム
+- **編み図パターンの販売・購入**: Stripe決済を通じた購入システム
 - **ユーザー認証**: OAuth経由でのログイン機能
 - **購入履歴管理**: ユーザーの過去の購入履歴とダウンロード機能
 
@@ -23,7 +23,7 @@ Knitting Belle は編み図のダウンロード販売サイトです。
   - **Amazon Cognito**
   - **Amazon DynamoDB**
   - **Amazon S3**
-- **SST （Open Next）** - Web Server, CDN
+- **SST （Open Next）**
 - **AWS CDK**
 
 #### 決済・外部サービス
@@ -36,8 +36,21 @@ Knitting Belle は編み図のダウンロード販売サイトです。
 - **Lefthook** - Gitフック管理
 - **Pino** - 構造化ログ出力
 
+#### CI/CD
+- **GitHub Actions**
+
 #### パッケージ管理
 - **pnpm**
+
+#### AIツール
+- **Claude Code**
+  - **Super Claude**
+- **Cursor**
+- **（MCP）**
+  - **serena**
+  - **context7**
+  - **playwright**
+  - **sequential-thinking**
 
 
 ### 開発環境構築
@@ -132,8 +145,8 @@ ngrok http 3000
 - 編み図データ等を投入
 
 - adminユーザを作成
-    - Cognitoユーザープールにてユーザを作成
-    - 作成したユーザをadminグループに追加
+  - Cognitoユーザープールにてユーザを作成
+  - 作成したユーザをadminグループに追加
 
 #### 環境変数設定
 - Amplify Consoleから環境変数を設定する

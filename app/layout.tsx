@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Kiwi_Maru, League_Script } from "next/font/google";
 
 import "./globals.css";
 
@@ -8,7 +8,22 @@ import { Header } from "./_components/Header";
 import { amplifyConfigure } from "./_lib/configureAmplify";
 import { cn } from "./_lib/tailwindUtils";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+});
+
+const kiwiMaru = Kiwi_Maru({
+	subsets: ["latin"],
+	weight: ["300", "400", "500"],
+	variable: "--font-kiwi-maru",
+});
+
+const leagueScript = League_Script({
+	subsets: ["latin"],
+	weight: ["400"],
+	variable: "--font-league-script",
+});
 
 export const metadata: Metadata = {
 	title: "Knitting Belle",
@@ -70,7 +85,15 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ja">
-			<body className={cn(inter.className, "bg-background/50")}>
+			<body
+				className={cn(
+					inter.variable,
+					kiwiMaru.variable,
+					leagueScript.variable,
+					inter.className,
+					"bg-background/50",
+				)}
+			>
 				<Header />
 				<div className="container sm:mx-auto sm:flex sm:flex-col sm:items-center">
 					{children}
