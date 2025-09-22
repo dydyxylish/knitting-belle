@@ -19,6 +19,9 @@ export default $config({
 				}),
 				cert: process.env.CERTIFICATE_ARN,
 			},
+			server: {
+				memory: "2048 MB",
+			},
 		});
 	},
 });

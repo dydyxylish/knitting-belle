@@ -121,7 +121,6 @@ jobs:
         with:
           name: amplify-outputs
           path: amplify_outputs.json
-          retention-days: 1
 
   jest:
     name: Run Jest tests

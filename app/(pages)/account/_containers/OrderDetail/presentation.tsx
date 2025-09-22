@@ -10,6 +10,8 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/app/_components/ui/resizable";
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
+import { cn } from "@/app/_lib/tailwindUtils";
 
 interface OrderDetailPresentationProps {
 	children: React.ReactNode;
@@ -34,14 +36,14 @@ export const OrderDetailPresentation = ({
 			<ResizablePanelGroup direction="vertical">
 				<ResizablePanel defaultSize={70}>
 					<div className="flex h-full items-center justify-center p-2">
-						<span className="line-clamp-3 font-kiwi text-sm">
+						<span className={cn("line-clamp-3 text-sm", kiwiMaru.className)}>
 							{knittingPattern.title}
 						</span>
 					</div>
 				</ResizablePanel>
 				<ResizablePanel defaultSize={30}>
 					<div className="flex h-full items-center justify-center p-2">
-						<span className="font-kiwi text-slate-500 text-sm">
+						<span className={cn("text-slate-500 text-sm", kiwiMaru.className)}>
 							{`${dayjs(purchaseHistory.purchasedAt).format("YYYY年M月D日")} に購入済み`}
 						</span>
 					</div>

@@ -31,6 +31,8 @@ export default {
 				},
 			];
 		})(),
+		deviceSizes: [640],
+		imageSizes: [96, 384, 768],
 	},
 	redirects: () => {
 		if (process.env.ENABLE_TEST_API === "false") {

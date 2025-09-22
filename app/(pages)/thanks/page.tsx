@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
 
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
+import { cn } from "@/app/_lib/tailwindUtils";
 import { env } from "@/lib/env";
 import { FallbackThanks } from "./_components/FallbackThanks";
 import { ThanksComment } from "./_components/ThanksComment";
@@ -16,7 +18,12 @@ export default async function Page({
 		<div className="flex flex-col items-center">
 			<Suspense fallback={<FallbackThanks />}>
 				<ThanksComment />
-				<div className="mt-6 flex flex-col items-center gap-6 px-8 font-kiwi">
+				<div
+					className={cn(
+						"mt-6 flex flex-col items-center gap-6 px-8",
+						kiwiMaru.className,
+					)}
+				>
 					<h1 className="text-xl">ご購入ありがとうございます</h1>
 					<p>以下のボタンから、PDFファイルをダウンロードしてください</p>
 					<span>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { v4 as uuidV4 } from "uuid";
 
 import type { Schema } from "@/amplify/data/resource";
+import { PLACEHOLDER_SVG } from "@/app/_components/BlurDataUrl";
 import { CarouselContent, CarouselItem } from "@/app/_components/ui/carousel";
 import { cn } from "@/app/_lib/tailwindUtils";
 
@@ -29,7 +30,12 @@ export const SlideContent = ({ topImages }: SlideContentProps) => (
 					alt={img.alt}
 					width={500}
 					height={500}
-					{...{ priority: index === 0 ? true : undefined }}
+					sizes="640px"
+					priority={index === 0} // FIXME: priorityが効いていない？か調査
+					fetchPriority={index === 0 ? "high" : "auto"}
+					loading={index === 0 ? "eager" : "lazy"}
+					placeholder="blur"
+					blurDataURL={PLACEHOLDER_SVG}
 					className={cn(
 						"mx-auto origin-center rounded-sm border-[14px] border-white border-b-[50px] shadow-lg",
 						getRotateDeg(index),

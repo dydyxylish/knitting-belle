@@ -7,6 +7,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
+import { cn } from "@/app/_lib/tailwindUtils";
 
 interface DetailKnittingPatternPresentationProps {
 	children: React.ReactNode;
@@ -20,7 +22,12 @@ export const DetailKnittingPatternPresentation = ({
 	return (
 		<div className="mt-16 sm:mx-auto sm:max-w-[700px]">
 			{children}
-			<Card className="mt-4 border-none bg-transparent px-8 font-kiwi shadow-none">
+			<Card
+				className={cn(
+					"mt-4 border-none bg-transparent px-8 shadow-none",
+					kiwiMaru.className,
+				)}
+			>
 				<CardTitle>
 					<h1 className="leading-7">{knittingPattern.title}</h1>
 				</CardTitle>
