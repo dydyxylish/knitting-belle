@@ -1,5 +1,7 @@
 ## Knitting Belle 編み図ダウンロードサイト
 
+<video src="https://github.com/user-attachments/assets/ca6f11d0-7f49-4c8c-abb2-07acc4874826" width="320"></video>
+
 ### 概要
 
 Knitting Belle は編み図のダウンロード販売サイトです。
