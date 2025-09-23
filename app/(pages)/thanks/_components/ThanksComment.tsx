@@ -2,6 +2,8 @@
 import { type LottieOptions, useLottie } from "lottie-react";
 import type { CSSProperties } from "react";
 
+import { leagueScript } from "@/app/_lib/fonts/leagueScript";
+import { cn } from "@/app/_lib/tailwindUtils";
 import confetti from "@/public/confetti.json";
 import giftBox from "@/public/giftBox.json";
 
@@ -34,7 +36,12 @@ export const ThanksComment = () => {
 	const { View: GiftBox } = useLottie(giftBoxOptions, giftBoxStyles);
 	return (
 		<div className="relative sm:w-full sm:max-w-xl">
-			<p className="-translate-x-1/2 -translate-y-1/4 absolute top-1/4 left-1/2 transform whitespace-nowrap font-league text-6xl">
+			<p
+				className={cn(
+					"-translate-x-1/2 -translate-y-1/4 absolute top-1/4 left-1/2 transform whitespace-nowrap text-6xl",
+					leagueScript.className,
+				)}
+			>
 				Thank you
 			</p>
 			{Confetti}

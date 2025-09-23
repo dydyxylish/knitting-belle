@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# 内部・非公開ページをブロック
+Disallow: /api/
+Disallow: /callback
+Disallow: /cancel
+Disallow: /thanks
+Disallow: /_next/
+Disallow: /404
+Disallow: /500
+
+# サイトマップの場所
+Sitemap: https://knitting-belle.com/sitemap.xml
+
+# クロール頻度の調整
+Crawl-delay: 1

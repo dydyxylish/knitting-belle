@@ -4,6 +4,7 @@ import Image from "next/image";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
+import { PLACEHOLDER_SVG } from "@/app/_components/BlurDataUrl";
 import type { CarouselOptions } from "@/app/_components/ui/carousel";
 import { ScrollArea, ScrollBar } from "@/app/_components/ui/scroll-area";
 import { Thumb } from "./Thumb";
@@ -55,6 +56,8 @@ export const ThumbnailCarousel: React.FC<PropType> = ({ slides, options }) => {
 								className="h-auto w-full object-cover"
 								width={500}
 								height={500}
+								placeholder="blur"
+								blurDataURL={PLACEHOLDER_SVG}
 								{...{ priority: index === 0 ? true : undefined }}
 							/>
 						</div>

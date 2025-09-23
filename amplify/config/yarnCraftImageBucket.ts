@@ -13,8 +13,11 @@ export function configureYarnCraftImageBucket(backend: BackendInstance) {
 		new PolicyStatement({
 			effect: Effect.ALLOW,
 			principals: [new ArnPrincipal(adminRole.roleArn)],
-			actions: ["s3:PutObject"],
-			resources: [`${yarnCraftImageBucket.bucketArn}/yarnCraftImage/*`],
+			actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
+			resources: [
+				yarnCraftImageBucket.bucketArn,
+				`${yarnCraftImageBucket.bucketArn}/yarnCraftImage/*`,
+			],
 		}),
 	);
 

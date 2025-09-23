@@ -6,11 +6,18 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/app/_components/ui/accordion";
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
+import { cn } from "@/app/_lib/tailwindUtils";
 import { env } from "@/lib/env";
 
 export const FAQ = () => {
 	return (
-		<div className="mx-10 mt-24 flex flex-col items-center gap-8 rounded-2xl bg-secondary/20 pb-4 font-kiwi">
+		<div
+			className={cn(
+				"mx-10 mt-24 flex flex-col items-center gap-8 rounded-2xl bg-secondary/20 pb-4",
+				kiwiMaru.className,
+			)}
+		>
 			<h3 className="mt-6 text-xl">よくあるご質問</h3>
 			<Accordion type="single" collapsible className="mx-6">
 				<AccordionItem value="item-1">

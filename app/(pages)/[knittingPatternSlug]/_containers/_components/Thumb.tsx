@@ -2,9 +2,7 @@
 import Image from "next/image";
 import type React from "react";
 
-// 静的なプレースホルダー（サーバー/クライアント共通）
-const PLACEHOLDER_SVG =
-	"data:image/svg+xml;charset=utf-8,%3Csvg width='72' height='56' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23d1d5db'/%3E%3C/svg%3E";
+import { PLACEHOLDER_SVG } from "@/app/_components/BlurDataUrl";
 
 type PropType = {
 	selected: boolean;

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Schema } from "@/amplify/data/resource";
+import { PLACEHOLDER_SVG } from "@/app/_components/BlurDataUrl";
 import { CardContent } from "@/app/_components/ui/card";
 import { generateImageUrl } from "@/app/_lib/fetch/yarnCraftImage/generateImageUrl";
 
@@ -23,6 +24,9 @@ export const YarnCraftImagePresentation = ({
 					alt={topImage.alt}
 					width={500}
 					height={500}
+					sizes="640px"
+					placeholder="blur"
+					blurDataURL={PLACEHOLDER_SVG}
 					className="rounded-xl border border-slate-300"
 				/>
 			</Link>

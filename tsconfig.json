@@ -31,5 +31,5 @@
 		"cypress/scripts/**/*.mjs",
 		"e2e/playwright/test/**/*.ts"
 	],
-	"exclude": ["node_modules", "amplify", "e2e"]
+	"exclude": ["node_modules", "amplify", "e2e", "sst.config.ts"]
 }

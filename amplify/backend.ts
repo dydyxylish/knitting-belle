@@ -4,7 +4,6 @@ import { env } from "@/lib/env";
 import { auth } from "./auth/resource";
 import { configureCloudFront } from "./config/cloudfront";
 import { configureCognitoPolicies } from "./config/cognitoPolicies";
-import { configureManagedLogin } from "./config/managedLogin";
 import { configureSeedBucket } from "./config/seedBucket";
 import { configureYarnCraftImageBucket } from "./config/yarnCraftImageBucket";
 import { data } from "./data/resource";
@@ -26,5 +25,4 @@ configureYarnCraftImageBucket(backend);
 
 if (env.AMPLIFY_PRODUCTION) {
 	configureCloudFront(backend);
-	configureManagedLogin(backend);
 }

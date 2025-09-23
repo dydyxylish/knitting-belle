@@ -11,6 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/app/_components/ui/dialog";
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
 import { cn } from "../_lib/tailwindUtils";
 
 interface LoginDialogProps {
@@ -38,7 +39,7 @@ export function LoginDialog({
 			</DialogTrigger>
 			<DialogContent className="flex flex-col items-center sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="font-kiwi text-base">
+					<DialogTitle className={cn("text-base", kiwiMaru.className)}>
 						ご購入手続きにはログインが必要です
 					</DialogTitle>
 				</DialogHeader>

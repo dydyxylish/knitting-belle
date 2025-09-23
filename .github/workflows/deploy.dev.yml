@@ -1,9 +1,8 @@
-name: Tests
+name: Deploy Dev
 
 on:
-  pull_request:
-    branches: [main, develop]
-    types: [opened, synchronize, reopened]
+  push:
+    branches: develop
 
 jobs:
   install:
@@ -34,14 +33,11 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
-  sandbox:
-    name: Create Sandbox
+  deploy-backend:
+    name: Deploy Backend
     needs: install
-    timeout-minutes: 30
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      DOTENV_ENV: ci
-      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
     permissions:
       contents: read
       id-token: write # oidc用
@@ -49,11 +45,6 @@ jobs:
       amplify-cache-hit: ${{ steps.amplify_outputs_cache.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v4
-
-      # setup env
-      - name: Setup environment files
-        run: |
-          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
 
       - name: Set env only in act
         if: ${{ env.ACT }}
@@ -69,13 +60,18 @@ jobs:
           role-session-name: githubActionsForSetup
 
       - name: Configure AWS Credentials（Act）
+        id: creds
         if: ${{ env.ACT }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+
+      # setup env
+      - name: Setup environment files
+        run: |
+          printf "%s" "${{ secrets.DEV_ENV_FILE }}" > .env
 
       - name: Corepack enable
         run: corepack enable
@@ -96,8 +92,8 @@ jobs:
 
       - name: Set Sandbox Secret
         run: |
-          printf "%s" "${{ secrets.GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_ID
-          printf "%s" "${{ secrets.GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ env.SANDBOX_NAME }} GOOGLE_CLIENT_SECRET
+          printf "%s" "${{ secrets.DEV_GOOGLE_CLIENT_ID }}" | pnpm sandbox:set_secret --identifier ${{ github.ref_name }} GOOGLE_CLIENT_ID
+          printf "%s" "${{ secrets.DEV_GOOGLE_CLIENT_SECRET }}" | pnpm sandbox:set_secret --identifier ${{ github.ref_name }} GOOGLE_CLIENT_SECRET
 
       # ディレクトリのハッシュをキーにキャッシュを取得
       - name: Restore amplify_outputs.json cache
@@ -112,8 +108,8 @@ jobs:
         if: steps.amplify_outputs_cache.outputs.cache-hit != 'true'
         run: |
           echo "No cache hit. Creating Sandbox..."
-          pnpm sandbox:create --identifier ${{ env.SANDBOX_NAME }} --once
-          pnpm sandbox:seed --identifier ${{ env.SANDBOX_NAME }}
+          pnpm sandbox:create --identifier ${{ github.ref_name }} --once
+          pnpm sandbox:seed --identifier ${{ github.ref_name }}
 
       # amplify_outputs.jsonをアーティファクトとして保存
       - name: Upload amplify_outputs.json
@@ -122,21 +118,43 @@ jobs:
           name: amplify-outputs
           path: amplify_outputs.json
 
-  jest:
-    name: Run Jest tests
-    needs: [install, sandbox]
-    timeout-minutes: 30
+  deploy-frontend:
+    name: Deploy Frontend
+    needs: deploy-backend
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      DOTENV_ENV: ci
-      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
+    permissions:
+      contents: read
+      id-token: write # oidc用
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set env only in act
+        if: ${{ env.ACT }}
+        run: echo "ACTIONS_RUNTIME_TOKEN=${{ secrets.ACTIONS_RUNTIME_TOKEN }}" >> $GITHUB_ENV
+
+      # configure aws credentials
+      - name: Configure AWS Credentials（GitHub Actions）
+        if: ${{ !env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+          role-session-name: githubActionsForSetup
+
+      - name: Configure AWS Credentials（Act）
+        id: creds
+        if: ${{ env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # setup env
       - name: Setup environment files
         run: |
-          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+          printf "%s" "${{ secrets.DEV_ENV_FILE }}" > .env
 
       - name: Corepack enable
         run: corepack enable
@@ -162,87 +180,9 @@ jobs:
           name: amplify-outputs
           path: .
 
-      - name: Run Jest tests
-        run: pnpm test:ci
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage
-          path: coverage/
-          retention-days: 30
-
-  playwright:
-    name: Run Playwright tests
-    needs: [install, sandbox]
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    env:
-      DOTENV_ENV: ci
-      SANDBOX_NAME: ci-pr-${{ github.event.pull_request.number }}
-    steps:
-      - uses: actions/checkout@v4
-
-      # setup env
-      - name: Setup environment files
+      - name: Deploy Frontend
         run: |
-          printf "%s" "${{ secrets.CI_ENV_FILE }}" > .env.ci
+          pnpm sst:deploy --stage ${{ github.ref_name }}
 
-      - name: Corepack enable
-        run: corepack enable
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-          cache-dependency-path: "pnpm-lock.yaml"
-
-      - name: Restore node modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      # amplify_outputs.jsonをダウンロード
-      - name: Download amplify_outputs.json
-        uses: actions/download-artifact@v4
-        with:
-          name: amplify-outputs
-          path: .
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Install Playwright Browsers
-        run: pnpm playwright install --with-deps
-
-      - name: Build Next.js
-        run: pnpm build
-
-      - name: Start Next.js
-        run: pnpm pm2:start
-
-      - name: Wait for Next.js to start
-        run: pnpm wait:e2e
-
-      - name: Run Playwright tests
-        run: pnpm e2e
-
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
-      - name: Stop Next.js
-        run: pnpm pm2:stop
+      - name: Deploy Cognito Managed Login
+        run: pnpm deploy:managed-login --ci --verbose

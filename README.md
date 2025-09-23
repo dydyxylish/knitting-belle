@@ -1,4 +1,58 @@
-## Knitting_belle 編み図ダウンロードサイト
+## Knitting Belle 編み図ダウンロードサイト
+
+### 概要
+
+Knitting Belle は編み図のダウンロード販売サイトです。
+編み手さん向けに編み図を購入・ダウンロードできるプラットフォームを提供します。
+
+#### 主な機能
+- **編み図パターンの販売・購入**: Stripe決済を通じた購入システム
+- **ユーザー認証**: OAuth経由でのログイン機能
+- **購入履歴管理**: ユーザーの過去の購入履歴とダウンロード機能
+
+
+### Tech Stack
+
+#### フロントエンド
+- **Next.js**
+- **TypeScript**
+- **Tailwind CSS**
+
+#### バックエンド・インフラ
+- **AWS Amplify Backend （Gen 2）**
+  - **Amazon Cognito**
+  - **Amazon DynamoDB**
+  - **Amazon S3**
+- **SST （Open Next）**
+- **AWS CDK**
+
+#### 決済・外部サービス
+- **Stripe** - 決済処理システム
+
+#### 開発・品質管理ツール
+- **Jest** - 単体テスト
+- **Playwright** - E2Eテスト
+- **Biome** - コードフォーマット・リンティング
+- **Lefthook** - Gitフック管理
+- **Pino** - 構造化ログ出力
+
+#### CI/CD
+- **GitHub Actions**
+
+#### パッケージ管理
+- **pnpm**
+
+#### AIツール
+- **Claude Code**
+  - **Super Claude**
+- **Cursor**
+- **（MCP）**
+  - **serena**
+  - **context7**
+  - **playwright**
+  - **sequential-thinking**
+
+
 ### 開発環境構築
 #### 前提
 ```
@@ -27,16 +81,7 @@ v20.19.2
 
 #### 環境変数設定
 - .env.developmentを作成する
-```
-AMPLIFY_APP_ORIGIN=http://localhost # createAuthRouteHandlersで使用
-GOOGLE_CALLBACK_URLS=http://localhost:3000/api/auth/sign-in-callback
-GOOGLE_LOGOUT_URLS=http://localhost:3000/api/auth/sign-out-callback
-STRIPE_SUCCESS_URL=http://localhost:3000/thanks?session_id={CHECKOUT_SESSION_ID}
-STRIPE_CANCEL_URL=http://localhost:3000/cancel
-COOKIE_DOMAIN=localhost
-STRIPE_API_KEY=XXXXXXXXXXX
-STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
-```
+  - .env.exampleを参照
 
 #### Secretを設定
 ```
@@ -100,20 +145,22 @@ ngrok http 3000
 - 編み図データ等を投入
 
 - adminユーザを作成
-    - Cognitoユーザープールにてユーザを作成
-    - 作成したユーザをadminグループに追加
+  - Cognitoユーザープールにてユーザを作成
+  - 作成したユーザをadminグループに追加
 
 #### 環境変数設定
 - Amplify Consoleから環境変数を設定する
+  - .env.exampleの環境変数に加えて、以下を設定
 ```
-AMPLIFY_APP_ORIGIN=http://localhost # createAuthRouteHandlersで使用
-GOOGLE_CALLBACK_URLS=http://localhost:3000/api/auth/sign-in-callback
-GOOGLE_LOGOUT_URLS=http://localhost:3000/api/auth/sign-out-callback
-STRIPE_SUCCESS_URL=http://localhost:3000/thanks?session_id={CHECKOUT_SESSION_ID}
-STRIPE_CANCEL_URL=http://localhost:3000/cancel
-COOKIE_DOMAIN=localhost
-STRIPE_API_KEY=XXXXXXXXXXX
-STRIPE_WEBHOOK_SECRET=XXXXXXXXXXX
+"CERTIFICATE_ARN"
+"CDN_DOMAIN"
+"CDN_SUBDOMAIN"
+"HOSTZONE_ID"
+"HOSTZONE_NAME"
+"MANAGED_LOGIN_DOMAIN"
+"MANAGED_LOGIN_SUBDOMAIN"
+"APP_DOMAIN"
+"CDK_DEFAULT_ACCOUNT"
 ```
 
 - Amplify.ymlにて、.envファイルに追記するよう指定する
@@ -147,7 +194,7 @@ AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_SESSION_TOKEN=
 ACTIONS_RUNTIME_TOKEN=
-CI_ENV_FILE=${cat .env}
+CI_ENV_FILE=${cat .env.development}
 ```
 
 - act実行

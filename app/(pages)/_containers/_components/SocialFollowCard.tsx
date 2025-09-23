@@ -4,6 +4,8 @@ import {
 	CardDescription,
 	CardTitle,
 } from "@/app/_components/ui/card";
+import { kiwiMaru } from "@/app/_lib/fonts/kiwiMaru";
+import { cn } from "@/app/_lib/tailwindUtils";
 import { env } from "@/lib/env";
 import { InstagramLottie } from "./InstagramLottie";
 
@@ -15,7 +17,9 @@ export default function SocialFollowCard() {
 					<InstagramLottie />
 				</CardContent>
 				<CardTitle>@knitting_belle</CardTitle>
-				<CardDescription className="mt-6 px-4 text-center font-kiwi">
+				<CardDescription
+					className={cn("mt-6 px-4 text-center", kiwiMaru.className)}
+				>
 					新作情報や制作の舞台裏をお届けしています。
 				</CardDescription>
 			</Card>
